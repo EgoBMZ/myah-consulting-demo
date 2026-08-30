@@ -83,7 +83,7 @@ export function BlogDetailContent({ id }: { id: string }) {
   return (
     <div className="pt-8 pb-24 bg-background min-h-screen flex flex-col">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors mb-8 bg-primary/10 px-4 py-2 rounded-full border border-primary/20 shadow-sm">
+        <Link href="/blog" className="inline-flex items-center gap-2 text-foreground font-semibold hover:text-accent transition-colors mb-8 bg-muted px-4 py-2 rounded-full border border-border shadow-sm">
           <ArrowLeft size={18} />
           Volver al blog
         </Link>
@@ -100,25 +100,25 @@ export function BlogDetailContent({ id }: { id: string }) {
           </div>
 
           <div className="p-8 md:p-12">
-             <div className="inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full mb-6 border border-primary/20">
+             <div className="inline-block bg-muted text-foreground text-xs font-bold px-3 py-1 rounded-full mb-6 border border-border">
                {article.category}
              </div>
              <h1 className="text-3xl md:text-5xl font-black text-foreground leading-tight mb-6">{article.title}</h1>
              <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground font-medium mb-10 pb-10 border-b border-border">
                 <div className="flex items-center gap-3">
-                  <img src={article.authorImage} alt={article.author} className="w-8 h-8 rounded-full object-cover border-2 border-primary/20" />
+                  <img src={article.authorImage} alt={article.author} className="w-8 h-8 rounded-full object-cover border-2 border-border" />
                   <span className="font-bold text-foreground">{article.author}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar size={16} className="text-primary" />
+                  <Calendar size={16} className="text-accent" />
                   {article.date}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock size={16} className="text-primary" />
+                  <Clock size={16} className="text-accent" />
                   {article.readTime}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Eye size={16} className="text-primary" />
+                  <Eye size={16} className="text-accent" />
                   {article.views}
                 </div>
              </div>
@@ -131,7 +131,7 @@ export function BlogDetailContent({ id }: { id: string }) {
 
              <div className="mt-12 pt-8 border-t border-border flex items-center justify-between">
                 <span className="text-sm font-semibold text-foreground">Compartir este artículo:</span>
-                <button className="p-3 rounded-full bg-muted text-foreground hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
+                <button className="p-3 rounded-full bg-muted text-foreground hover:bg-accent hover:text-slate-900 transition-colors shadow-sm">
                   <Share2 size={20} />
                 </button>
              </div>
@@ -147,10 +147,10 @@ export function BlogDetailContent({ id }: { id: string }) {
             
             <div className="hidden sm:flex items-center gap-4">
                <div className="flex items-center gap-2">
-                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronLeft size={20} />
                  </button>
-                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronRight size={20} />
                  </button>
                </div>
@@ -179,10 +179,10 @@ export function BlogDetailContent({ id }: { id: string }) {
                     <Calendar size={12} />
                     {related.date}
                   </div>
-                  <h4 className="font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">{related.title}</h4>
+                  <h4 className="font-bold text-foreground mb-2 group-hover:text-primary dark:group-hover:text-accent transition-colors line-clamp-2">{related.title}</h4>
                   <div className="mt-auto flex items-center justify-between pt-4 border-t border-border">
-                    <span className="text-sm font-semibold text-primary">Leer más</span>
-                    <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <span className="text-sm font-semibold text-foreground group-hover:text-primary dark:group-hover:text-accent transition-colors">Leer más</span>
+                    <span className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-accent dark:group-hover:text-slate-900 transition-colors">
                       <ArrowRight size={14} />
                     </span>
                   </div>
@@ -193,10 +193,10 @@ export function BlogDetailContent({ id }: { id: string }) {
           
           <div className="flex sm:hidden items-center justify-between mt-4">
              <div className="flex items-center gap-2">
-                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronLeft size={20} />
                  </button>
-                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronRight size={20} />
                  </button>
              </div>

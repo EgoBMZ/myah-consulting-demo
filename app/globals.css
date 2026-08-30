@@ -8,10 +8,10 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --color-primary: #08423B;
-  --color-primary-foreground: #FFFFFF;
-  --color-accent: #F2B800;
-  --color-accent-hover: #D9A400;
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --font-sans: var(--font-inter);
 }
 
@@ -24,6 +24,12 @@
   --muted: #F3F4F6;
   --muted-foreground: #4B5563;
   --border: #E5E7EB;
+  
+  /* Brand Colors Light */
+  --primary: #08423B;
+  --primary-foreground: #FFFFFF;
+  --accent: #F2B800;
+  --accent-hover: #D9A400;
 }
 
 .dark {
@@ -34,6 +40,12 @@
   --muted: #0D332D;
   --muted-foreground: #94A3B8;
   --border: #0D332D;
+  
+  /* Brand Colors Dark - Reverting to original dark green as requested */
+  --primary: #08423B; 
+  --primary-foreground: #FFFFFF; 
+  --accent: #F2B800;
+  --accent-hover: #FBBF24;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +57,11 @@
     --muted: #0D332D;
     --muted-foreground: #94A3B8;
     --border: #0D332D;
+    
+    --primary: #08423B;
+    --primary-foreground: #FFFFFF;
+    --accent: #F2B800;
+    --accent-hover: #FBBF24;
   }
 }
 

@@ -94,7 +94,7 @@ export function BlogContent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6">
-            Blog y <span className="text-primary relative inline-block">
+            Blog y <span className="text-primary dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-accent dark:to-yellow-300 relative inline-block">
               Novedades
               <svg className="absolute w-full h-3 -bottom-1 left-0 text-accent opacity-70" viewBox="0 0 100 10" preserveAspectRatio="none">
                 <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="transparent" />
@@ -116,8 +116,8 @@ export function BlogContent() {
                 onClick={() => setActiveCategory(category)}
                 className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                   activeCategory === category 
-                    ? "bg-primary text-primary-foreground shadow-md" 
-                    : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                    ? "bg-primary text-primary-foreground dark:bg-accent dark:text-slate-900 shadow-md" 
+                    : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary dark:hover:bg-accent/10 dark:hover:text-accent"
                 }`}
               >
                 {category}
@@ -178,7 +178,7 @@ export function BlogContent() {
                       </div>
                     </div>
                     
-                    <h3 className="text-xl md:text-2xl font-black text-foreground mb-3 group-hover:text-primary transition-colors leading-snug">
+                    <h3 className="text-xl md:text-2xl font-black text-foreground mb-3 group-hover:text-primary dark:group-hover:text-accent transition-colors leading-snug">
                       <Link href={`/blog/${post.id}`}>{post.title}</Link>
                     </h3>
                     
@@ -188,13 +188,13 @@ export function BlogContent() {
                     
                     <div className="flex items-center justify-between pt-5 border-t border-border mt-auto">
                       <div className="flex items-center gap-3">
-                        <img src={post.authorImage} alt={post.author} className="w-8 h-8 rounded-full object-cover border-2 border-primary/20" />
+                        <img src={post.authorImage} alt={post.author} className="w-8 h-8 rounded-full object-cover border-2 border-primary/20 dark:border-accent/20" />
                         <span className="text-sm font-bold text-foreground">{post.author}</span>
                       </div>
                       
                       <Link
                         href={`/blog/${post.id}`}
-                        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary dark:bg-accent/10 dark:text-accent hover:bg-primary hover:text-primary-foreground dark:hover:bg-accent dark:hover:text-slate-900 transition-colors shadow-sm"
                       >
                         <ArrowRight size={18} />
                       </Link>

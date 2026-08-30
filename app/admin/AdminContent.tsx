@@ -1,113 +1,100 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { Lock, Mail, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { AdminSidebar } from "./components/AdminSidebar";
+import { ServicesManager } from "./components/ServicesManager";
+import { StoreManager } from "./components/StoreManager";
+import { BlogManager } from "./components/BlogManager";
+
+// Initial mock data
+const initialServices = [
+  { id: "1", title: "Implementación ISO 9001", description: "Sistema de Gestión de Calidad.", price: "$999" },
+  { id: "2", title: "Implementación ISO 14001", description: "Sistema de Gestión Ambiental.", price: "$899" },
+];
+
+const initialProducts = [
+  { 
+    id: "1", 
+    title: "Kit de Implementación ISO 9001", 
+    description: "Servicio completo de consultoría y auditoría.",
+    longDescription: "Nuestro Kit de Implementación es la solución definitiva para empresas que buscan la certificación ISO 9001 sin las complicaciones típicas del proceso.",
+    features: "Diagnóstico inicial completo\nMás de 40 plantillas\nAsesoría personalizada",
+    price: "$499 USD", 
+    originalPrice: "$899 USD",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+    createdBy: "Admin",
+    status: "published"
+  },
+  { 
+    id: "2", 
+    title: "Auditoría Interna Remota", 
+    description: "Verifica el cumplimiento antes de la certificación.",
+    longDescription: "Servicio de auditoría interna remota detallada.",
+    features: "Revisión documental\nEntrevistas remotas\nInforme final",
+    price: "$899 USD", 
+    originalPrice: "",
+    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop",
+    createdBy: "Admin",
+    status: "draft"
+  },
+];
+
+const initialPosts = [
+  { 
+    id: "1", 
+    title: "Lo que debes saber sobre la actualización normativa", 
+    extract: "En un mundo empresarial en constante evolución...",
+    content: "En un mundo empresarial en constante evolución, mantenerse al día con las normativas internacionales no es solo un requisito legal, sino una ventaja competitiva.\n\nLos cambios recientes en los estándares ISO ponen un mayor énfasis en el liderazgo y el compromiso de la alta dirección. La integración del análisis de riesgos en todos los niveles operativos se ha vuelto fundamental.\n\n¿Cómo puedes preparar a tu equipo?\n1. Realiza un diagnóstico del estado actual de tus procesos.\n2. Capacita a tu personal clave.",
+    date: "2026-10-24",
+    readTime: "5 min de lectura",
+    category: "Gestión",
+    author: "Mery Yineth Angulo",
+    authorImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=100&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop",
+    createdBy: "Admin",
+    status: "published"
+  },
+  { 
+    id: "2", 
+    title: "Beneficios de ISO 27001", 
+    extract: "Protege los datos de tu empresa con las mejores prácticas.",
+    content: "La información es el activo más valioso de cualquier organización moderna...",
+    date: "2026-10-15",
+    readTime: "3 min de lectura",
+    category: "Seguridad",
+    author: "Equipo Myah",
+    authorImage: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=100&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
+    createdBy: "Admin",
+    status: "draft"
+  },
+];
 
 export function AdminContent() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("store");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    // Simulate API call for now (Firebase not configured yet)
-    setTimeout(() => {
-      setLoading(false);
-      alert("Inicio de sesión simulado. Integración de Firebase pendiente.");
-    }, 1500);
-  };
+  // State for all sections (demo mode persistence)
+  const [services, setServices] = useState(initialServices);
+  const [products, setProducts] = useState(initialProducts);
+  const [posts, setPosts] = useState(initialPosts);
 
   return (
-    <div className="flex-grow bg-background flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background accents */}
-      <div className="absolute top-0 left-0 w-full h-[40vh] bg-primary/5 border-b border-border/50" />
-      <div className="absolute top-1/4 -right-20 w-96 h-96 bg-accent/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
-
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-card/80 backdrop-blur-xl border border-border shadow-2xl rounded-3xl p-8 relative z-10 mt-10"
-      >
-        <div className="flex justify-center mb-8">
-           <div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-foreground/5">
-             <Image 
-                src="/logoMyahConsulting.png" 
-                alt="Myah Consulting" 
-                width={150} 
-                height={50} 
-                className="object-contain h-10 w-auto" 
-              />
-           </div>
+    <div className="flex h-screen bg-background pt-20 overflow-hidden">
+      <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      
+      <main className="flex-1 overflow-y-auto p-8 bg-muted/20">
+        <div className="max-w-7xl mx-auto">
+          {activeTab === "services" && (
+            <ServicesManager services={services} setServices={setServices} />
+          )}
+          {activeTab === "store" && (
+            <StoreManager products={products} setProducts={setProducts} />
+          )}
+          {activeTab === "blog" && (
+            <BlogManager posts={posts} setPosts={setPosts} />
+          )}
         </div>
-
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-foreground">Panel Administrativo</h2>
-          <p className="text-sm text-muted-foreground mt-2">
-            Ingresa tus credenciales para gestionar la plataforma.
-          </p>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-2" htmlFor="email">
-              Correo Electrónico
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <input
-                id="email"
-                type="email"
-                required
-                className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                placeholder="admin@myahconsulting.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-2" htmlFor="password">
-              Contraseña
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <input
-                id="password"
-                type="password"
-                required
-                className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex justify-center items-center gap-2 py-3.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                Iniciar Sesión <ArrowRight size={18} />
-              </>
-            )}
-          </button>
-        </form>
-      </motion.div>
+      </main>
     </div>
   );
 }

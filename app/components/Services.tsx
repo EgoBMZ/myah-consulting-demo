@@ -41,7 +41,7 @@ export function Services() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group relative bg-card/70 backdrop-blur-md rounded-2xl p-8 border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 border bg-muted/50 border-border text-primary transition-transform group-hover:scale-110">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 border bg-muted/50 border-border text-primary dark:text-accent transition-transform group-hover:scale-110">
                   <Icon size={28} />
                 </div>
                 <h4 className="text-xl font-bold text-card-foreground mb-1">{service.title}</h4>
@@ -49,7 +49,7 @@ export function Services() {
                 <p className="text-muted-foreground leading-relaxed mb-6">
                   {service.description}
                 </p>
-                <a href={`/tienda#${service.id}`} className="text-primary font-medium flex items-center gap-2 group-hover:text-accent transition-colors">
+                <a href={`/tienda#${service.id}`} className="text-primary dark:text-accent font-medium flex items-center gap-2 group-hover:text-accent dark:group-hover:text-yellow-300 transition-colors">
                   {t.services.learnMore} <span className="transform transition-transform group-hover:translate-x-1">→</span>
                 </a>
               </motion.div>

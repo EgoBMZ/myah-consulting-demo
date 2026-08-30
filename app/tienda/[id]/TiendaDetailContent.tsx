@@ -177,13 +177,13 @@ export function TiendaDetailContent({ id }: { id: string }) {
 
           <div className="pt-8 border-t border-border">
             <h3 className="text-xl md:text-2xl font-black text-foreground mb-8 flex items-center gap-3">
-              <CheckCircle2 className="text-primary" size={28} />
+              <CheckCircle2 className="text-primary dark:text-accent" size={28} />
               ¿Qué incluye este servicio?
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {product.features.map((feature, idx) => (
-                <div key={idx} className="flex items-start gap-3 p-4 bg-muted/40 rounded-2xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-colors">
-                  <CheckCircle2 size={24} className="text-primary flex-shrink-0" />
+                <div key={idx} className="flex items-start gap-3 p-4 bg-muted/40 rounded-2xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 dark:hover:border-accent/30 dark:hover:bg-accent/5 transition-colors">
+                  <CheckCircle2 size={24} className="text-primary dark:text-accent flex-shrink-0" />
                   <span className="text-foreground/90 font-medium leading-relaxed">{feature}</span>
                 </div>
               ))}
@@ -197,9 +197,9 @@ export function TiendaDetailContent({ id }: { id: string }) {
             <h3 className="text-3xl font-black text-foreground mb-4">Lo que dicen nuestros clientes</h3>
             <p className="text-muted-foreground">Empresas que ya lograron su certificación con nuestros servicios.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {product.testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-card border border-border p-8 rounded-3xl shadow-sm flex flex-col h-full">
+              <div key={testimonial.id} className="min-w-[300px] md:min-w-[400px] bg-card border border-border p-8 rounded-3xl shadow-sm flex flex-col h-full snap-start">
                 <div className="flex text-accent mb-6">
                   {[...Array(testimonial.rating)].map((_, i) => <Star key={i} size={18} className="fill-accent" />)}
                 </div>
@@ -223,14 +223,14 @@ export function TiendaDetailContent({ id }: { id: string }) {
             
             <div className="hidden sm:flex items-center gap-4">
                <div className="flex items-center gap-2">
-                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronLeft size={20} />
                  </button>
-                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronRight size={20} />
                  </button>
                </div>
-               <Link href="/tienda" className="flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors ml-4 pl-4 border-l border-border">
+               <Link href="/tienda" className="flex items-center gap-2 text-foreground font-semibold hover:text-accent transition-colors ml-4 pl-4 border-l border-border">
                  Ver catálogo
                </Link>
             </div>
@@ -251,11 +251,11 @@ export function TiendaDetailContent({ id }: { id: string }) {
                   />
                 </div>
                 <div className="p-5 flex flex-col flex-grow">
-                  <h4 className="font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{related.title}</h4>
+                  <h4 className="font-bold text-foreground mb-2 group-hover:text-primary dark:group-hover:text-accent transition-colors">{related.title}</h4>
                   <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{related.description}</p>
                   <div className="mt-auto flex items-center justify-between pt-4 border-t border-border">
-                    <span className="font-black text-foreground">{related.price}</span>
-                    <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <span className="text-sm font-semibold text-foreground group-hover:text-primary dark:group-hover:text-accent transition-colors">Leer más</span>
+                    <span className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-accent dark:group-hover:text-slate-900 transition-colors">
                       <ArrowRight size={14} />
                     </span>
                   </div>
@@ -266,15 +266,15 @@ export function TiendaDetailContent({ id }: { id: string }) {
           
           <div className="flex sm:hidden items-center justify-between mt-4">
              <div className="flex items-center gap-2">
-                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronLeft size={20} />
                  </button>
-                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
+                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
                    <ChevronRight size={20} />
                  </button>
              </div>
-             <Link href="/tienda" className="flex items-center justify-center gap-2 text-primary font-semibold hover:text-accent transition-colors">
-                 Ver catálogo <ArrowRight size={16} />
+             <Link href="/tienda" className="flex items-center justify-center gap-2 text-foreground font-semibold hover:text-accent transition-colors">
+               Ver todo el catálogo <ArrowRight size={16} />
              </Link>
           </div>
         </div>

@@ -49,8 +49,8 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">
              <div className="relative group flex items-center">
-               <div className="dark:bg-white dark:px-3 dark:py-1.5 dark:rounded-xl dark:shadow-md transition-all duration-300">
-                  <Image src="/logoMyahConsulting.png" alt="Myah Consulting Logo" width={140} height={40} className="object-contain h-8 md:h-10 w-auto" />
+               <div className="transition-all duration-300">
+                  <Image src="/logoMyahConsulting.png" alt="Myah Consulting Logo" width={140} height={40} className="object-contain h-8 md:h-10 w-auto dark:invert dark:hue-rotate-180 dark:brightness-150 dark:saturate-200" />
                </div>
              </div>
           </Link>

@@ -64,7 +64,7 @@ export function TiendaContent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6">
-            Catálogo de <span className="text-primary relative inline-block">
+            Catálogo de <span className="text-primary dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-accent dark:to-yellow-300 relative inline-block">
               Servicios
               <svg className="absolute w-full h-3 -bottom-1 left-0 text-accent opacity-70" viewBox="0 0 100 10" preserveAspectRatio="none">
                 <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="transparent" />
@@ -96,7 +96,7 @@ export function TiendaContent() {
 
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex-grow">
-                  <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary dark:group-hover:text-accent transition-colors">
                     <Link href={`/tienda/${product.id}`}>{product.title}</Link>
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{product.description}</p>
@@ -104,7 +104,7 @@ export function TiendaContent() {
                   <ul className="space-y-2 mb-6">
                     {product.features.map((feature, idx) => (
                       <li key={idx} className="flex items-center gap-2">
-                        <CheckCircle2 size={16} className="text-primary flex-shrink-0" />
+                        <CheckCircle2 size={16} className="text-primary dark:text-accent flex-shrink-0" />
                         <span className="text-xs text-foreground/80 font-medium">{feature}</span>
                       </li>
                     ))}
@@ -115,7 +115,7 @@ export function TiendaContent() {
                   <span className="text-xl font-black text-foreground">{product.price}</span>
                   <Link 
                     href={`/tienda/${product.id}`}
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm"
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary dark:bg-accent/10 dark:text-accent hover:bg-primary hover:text-primary-foreground dark:hover:bg-accent dark:hover:text-slate-900 transition-colors shadow-sm"
                   >
                     <ArrowRight size={18} />
                   </Link>
