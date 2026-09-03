@@ -23,7 +23,7 @@ const initialProducts = [
     originalPrice: "$899 USD",
     image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
     createdBy: "Admin",
-    status: "published"
+    status: "published" as const
   },
   { 
     id: "2", 
@@ -35,7 +35,7 @@ const initialProducts = [
     originalPrice: "",
     image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop",
     createdBy: "Admin",
-    status: "draft"
+    status: "draft" as const
   },
 ];
 
@@ -52,7 +52,7 @@ const initialPosts = [
     authorImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=100&auto=format&fit=crop",
     image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop",
     createdBy: "Admin",
-    status: "published"
+    status: "published" as const
   },
   { 
     id: "2", 
@@ -66,7 +66,7 @@ const initialPosts = [
     authorImage: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=100&auto=format&fit=crop",
     image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
     createdBy: "Admin",
-    status: "draft"
+    status: "draft" as const
   },
 ];
 
