@@ -50,7 +50,7 @@ export function Services() {
                   {service.description}
                 </p>
                 <a href={`/tienda#${service.id}`} className="text-primary dark:text-accent font-medium flex items-center gap-2 group-hover:text-accent dark:group-hover:text-yellow-300 transition-colors">
-                  {t.services.learnMore} <span className="transform transition-transform group-hover:translate-x-1">→</span>
+                  {service.cta} <span className="transform transition-transform group-hover:translate-x-1">→</span>
                 </a>
               </motion.div>
             );

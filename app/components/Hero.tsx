@@ -59,13 +59,19 @@ export function Hero() {
                 <div className="bg-primary/10 p-1 rounded-full text-primary">
                    <CheckCircle2 size={16} />
                 </div>
-                <span>{t.hero.audit}</span>
+                <span>{t.hero.indicator1}</span>
               </div>
               <div className="flex items-center gap-2">
                  <div className="bg-primary/10 p-1 rounded-full text-primary">
                    <CheckCircle2 size={16} />
                 </div>
-                <span>{t.hero.cert}</span>
+                <span>{t.hero.indicator2}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                 <div className="bg-primary/10 p-1 rounded-full text-primary">
+                   <CheckCircle2 size={16} />
+                </div>
+                <span>{t.hero.indicator3}</span>
               </div>
             </div>
           </motion.div>
@@ -92,7 +98,7 @@ export function Hero() {
                        <div className="w-full bg-primary/20 h-2 rounded-full mb-2">
                          <div className="bg-primary w-3/4 h-2 rounded-full" />
                        </div>
-                       <span className="text-xs font-bold text-foreground">{t.hero.efficiency}</span>
+                       <span className="text-xs font-bold text-foreground">Gestión</span>
                      </div>
                   </div>
                   <div className="h-32 bg-accent/5 rounded-xl border border-accent/20 flex flex-col justify-between p-4 group hover:bg-accent/10 transition-colors">
@@ -101,7 +107,7 @@ export function Hero() {
                        <div className="w-full bg-accent/30 h-2 rounded-full mb-2">
                          <div className="bg-accent w-full h-2 rounded-full" />
                        </div>
-                       <span className="text-xs font-bold text-foreground">{t.hero.compliance}</span>
+                       <span className="text-xs font-bold text-foreground">Cumplimiento</span>
                      </div>
                   </div>
                 </div>
@@ -123,8 +129,8 @@ export function Hero() {
                 <CheckCircle2 size={24} />
               </div>
               <div>
-                <p className="text-sm font-bold text-foreground">{t.hero.badgeTitle}</p>
-                <p className="text-xs text-muted-foreground">{t.hero.badgeDesc}</p>
+                <p className="text-sm font-bold text-foreground">HSEQ</p>
+                <p className="text-xs text-muted-foreground">Expertos</p>
               </div>
             </motion.div>
           </motion.div>

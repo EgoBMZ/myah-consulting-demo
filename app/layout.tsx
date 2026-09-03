@@ -13,8 +13,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Myah Consulting - ISO Norms & Business Solutions",
-  description: "Firma de consultoría empresarial y servicios profesionales. Implementación y gestión de Normas ISO.",
+  title: "Consultoría en Gestión, ISO y Cumplimiento Empresarial | MYAH Consulting",
+  description: "Organizamos tu empresa, te certificamos en ISO 9001, 14001, 45001, 27001 y 37001, y te preparamos para licitar y competir. Diagnóstico gratuito en minutos.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

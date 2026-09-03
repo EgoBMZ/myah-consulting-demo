@@ -9,60 +9,63 @@ export const dictionaries = {
       contact: "Consultoría"
     },
     hero: {
-      badge: "Expertos en Sistemas Integrados de Gestión",
-      title: "Transformamos tu empresa hacia la",
-      titleHighlight: "Excelencia",
-      description: "Brindamos soluciones empresariales orientadas al cumplimiento de objetivos. Aumenta tu competitividad y productividad mediante implementación de normas ISO y mejora continua.",
-      ctaPrimary: "Agendar Diagnóstico",
-      ctaSecondary: "Explorar Servicios",
-      audit: "Auditoría Interna",
-      cert: "Certificación ISO",
-      efficiency: "Eficiencia +75%",
-      compliance: "Cumplimiento 100%",
-      badgeTitle: "Certificación",
-      badgeDesc: "Garantizada"
+      badge: "Consultoría en gestión, cumplimiento y competitividad empresarial",
+      title: "Tu empresa no necesita otra norma en la pared.",
+      titleHighlight: "Necesita estar lista para ganar.",
+      description: "Organizamos tu gestión, te certificamos donde lo necesites y preparamos tu empresa para competir por los contratos y oportunidades que hoy se te están escapando.",
+      ctaPrimary: "Hacer mi diagnóstico gratis",
+      ctaSecondary: "Ver cómo trabajamos",
+      indicator1: "Especialistas en Sistemas Integrados de Gestión (HSEQ)",
+      indicator2: "Experiencia en ISO 9001, 14001, 45001, 27001 y 37001",
+      indicator3: "Bogotá, Colombia"
     },
     services: {
-      tag: "Nuestras Especialidades",
-      title: "Soluciones para el cumplimiento de tus objetivos",
+      tag: "¿Qué necesita tu empresa hoy?",
+      title: "Servicios de MYAH Consulting agrupados por lo que quieres lograr",
       subtitle: "Te acompañamos en cada etapa de la implementación y auditoría de sistemas integrados de gestión.",
-      learnMore: "Conocer más",
+      learnMore: "Ver detalles",
       items: [
         {
-          id: "iso-9001",
-          title: "ISO 9001",
-          subtitle: "Gestión de Calidad",
-          description: "Mejora la satisfacción del cliente y optimiza tus procesos internos con los más altos estándares.",
+          id: "certificacion",
+          title: "Quiero certificar mi empresa",
+          subtitle: "No sé por dónde empezar ni si mi empresa está lista",
+          description: "Diagnóstico inicial, implementación guiada (ISO 9001, 14001, 45001, 27001) y acompañamiento hasta la certificación. Llegas a la auditoría con seguridad, no con incertidumbre.",
+          cta: "Quiero certificar mi empresa"
         },
         {
-          id: "iso-14001",
-          title: "ISO 14001",
-          subtitle: "Gestión Ambiental",
-          description: "Demuestra tu compromiso con el medio ambiente reduciendo el impacto ambiental de tus operaciones.",
+          id: "organizacion",
+          title: "Quiero organizar mi empresa",
+          subtitle: "Todo funciona de manera informal",
+          description: "Documentación de procesos, roles y gestión documental. Tu empresa opera sin depender de una sola persona.",
+          cta: "Quiero poner en orden mi empresa"
         },
         {
-          id: "iso-45001",
-          title: "ISO 45001",
-          subtitle: "Seguridad y Salud",
-          description: "Protege a tus empleados previniendo lesiones y enfermedades laborales, creando un entorno seguro.",
+          id: "auditoria",
+          title: "Quiero prepararme para una auditoría",
+          subtitle: "Se acerca una auditoría y no sé si vamos a pasar",
+          description: "Auditoría interna previa, cierre de no conformidades, simulacro. Llegas sin sorpresas.",
+          cta: "Quiero prepararme para mi auditoría"
         },
         {
-          id: "iso-27001",
-          title: "ISO 27001",
-          subtitle: "Seguridad de la Información",
-          description: "Asegura la confidencialidad, integridad y disponibilidad de los datos sensibles de tu empresa.",
+          id: "cumplimiento",
+          title: "Quiero cumplir lo que la ley me exige",
+          subtitle: "No sé si cumplo con protección de datos, lavado de activos o soborno",
+          description: "Diagnóstico normativo e implementación de Ley 1581 (datos personales), SAGRILAFT y ISO 37001 (antisoborno). Reduces exposición legal y reputacional.",
+          cta: "Quiero cumplir sin riesgos"
         },
         {
-          id: "mejora",
-          title: "Mejora Continua",
-          subtitle: "Optimización Empresarial",
-          description: "Planeación estratégica y productividad para elevar la competitividad de tu negocio.",
+          id: "licitaciones",
+          title: "Quiero prepararme para licitar",
+          subtitle: "Me faltan certificaciones para participar en licitaciones",
+          description: "Diagnóstico de brechas e implementación acelerada. Puedes tomar oportunidades que hoy no puedes.",
+          cta: "Quiero estar listo para licitar"
         },
         {
-          id: "capacitacion",
-          title: "Formación",
-          subtitle: "Capacitación Corporativa",
-          description: "Talleres y docencia en gestión documental, calidad y desarrollo de habilidades blandas.",
+          id: "procesos",
+          title: "Quiero mejorar mis procesos y mi productividad",
+          subtitle: "Reprocesos, sin indicadores claros",
+          description: "Análisis de procesos, mejora continua, uso de herramientas de gestión. Más productividad, decisiones con datos.",
+          cta: "Quiero mejorar mis procesos"
         }
       ]
     },
@@ -70,7 +73,7 @@ export const dictionaries = {
       tag: "Perfil Profesional",
       title: "Liderazgo con Experiencia",
       role: "CEO & Fundadora",
-      description: "Administradora de Empresas con especialización en Sistemas Integrados de Gestión (HSEQ). Con amplia trayectoria como coordinadora de calidad, ofrece a Myah Consulting sus conocimientos para liderar procesos de consultoría eficientes.",
+      description: "Administradora de Empresas especializada en Sistemas Integrados de Gestión (HSEQ). Ha liderado procesos de auditoría interna, optimización y planeación estratégica como coordinadora de calidad, y hoy pone ese conocimiento al servicio de empresas que quieren dejar de operar en el caos y empezar a competir en serio.",
       skills: [
         {
           title: "Experta en Calidad y HSEQ",
@@ -87,7 +90,7 @@ export const dictionaries = {
       ]
     },
     footer: {
-      description: "Consultoría empresarial especializada en implementación de normas ISO, mejora continua y optimización de procesos. Acompañamos a tu empresa hacia la excelencia.",
+      description: "Ayudamos a empresas a organizar su gestión, certificarse y prepararse para competir por más oportunidades de negocio. La norma es el medio; tu crecimiento es el objetivo.",
       quickLinks: "Enlaces Rápidos",
       isoNorms: "Normas ISO",
       contact: "Contacto",
@@ -97,7 +100,7 @@ export const dictionaries = {
     },
     whatsapp: {
       tooltip: "¿En qué podemos ayudarte?",
-      message: "Hola, me gustaría recibir más información sobre sus servicios de consultoría."
+      message: "¡Hola! 👋 Soy del equipo de MYAH Consulting. Para orientarte mejor y más rápido, cuéntame: ¿qué necesita tu empresa hoy?\n\n1️⃣ Certificarme en una norma ISO\n2️⃣ Organizar mis procesos\n3️⃣ Prepararme para una auditoría\n4️⃣ Cumplir con protección de datos / SAGRILAFT / antisoborno\n5️⃣ Prepararme para licitar\n6️⃣ Otro tema"
     }
   },
   en: {
@@ -110,60 +113,63 @@ export const dictionaries = {
       contact: "Consulting"
     },
     hero: {
-      badge: "Experts in Integrated Management Systems",
-      title: "We transform your company towards",
-      titleHighlight: "Excellence",
-      description: "We provide business solutions aimed at achieving objectives. Increase your competitiveness and productivity through ISO standards implementation and continuous improvement.",
-      ctaPrimary: "Schedule Diagnosis",
-      ctaSecondary: "Explore Services",
-      audit: "Internal Audit",
-      cert: "ISO Certification",
-      efficiency: "Efficiency +75%",
-      compliance: "100% Compliance",
-      badgeTitle: "Certification",
-      badgeDesc: "Guaranteed"
+      badge: "Consulting in management, compliance, and business competitiveness",
+      title: "Your company doesn't need another standard on the wall.",
+      titleHighlight: "It needs to be ready to win.",
+      description: "We organize your management, certify you where you need it, and prepare your company to compete for contracts and opportunities that are currently slipping away.",
+      ctaPrimary: "Get my free diagnosis",
+      ctaSecondary: "See how we work",
+      indicator1: "Specialists in Integrated Management Systems (HSEQ)",
+      indicator2: "Experience in ISO 9001, 14001, 45001, 27001 and 37001",
+      indicator3: "Bogotá, Colombia"
     },
     services: {
-      tag: "Our Specialties",
-      title: "Solutions to fulfill your objectives",
-      subtitle: "We accompany you in every stage of the implementation and audit of integrated management systems.",
-      learnMore: "Learn more",
+      tag: "What does your company need today?",
+      title: "MYAH Consulting services grouped by your goals",
+      subtitle: "We accompany you at every stage of the implementation and audit of integrated management systems.",
+      learnMore: "See details",
       items: [
         {
-          id: "iso-9001",
-          title: "ISO 9001",
-          subtitle: "Quality Management",
-          description: "Improve customer satisfaction and optimize your internal processes with the highest standards.",
+          id: "certificacion",
+          title: "I want to certify my company",
+          subtitle: "I don't know where to start or if my company is ready",
+          description: "Initial diagnosis, guided implementation (ISO 9001, 14001, 45001, 27001) and accompaniment until certification. You arrive at the audit with confidence, not uncertainty.",
+          cta: "I want to certify my company"
         },
         {
-          id: "iso-14001",
-          title: "ISO 14001",
-          subtitle: "Environmental Management",
-          description: "Demonstrate your commitment to the environment by reducing the environmental impact of your operations.",
+          id: "organizacion",
+          title: "I want to organize my company",
+          subtitle: "Everything works informally",
+          description: "Documentation of processes, roles, and document management. Your company operates without depending on a single person.",
+          cta: "I want to organize my company"
         },
         {
-          id: "iso-45001",
-          title: "ISO 45001",
-          subtitle: "Health and Safety",
-          description: "Protect your employees by preventing workplace injuries and illnesses, creating a safe environment.",
+          id: "auditoria",
+          title: "I want to prepare for an audit",
+          subtitle: "An audit is approaching and I don't know if we will pass",
+          description: "Prior internal audit, closure of non-conformities, mock audit. You arrive without surprises.",
+          cta: "I want to prepare for my audit"
         },
         {
-          id: "iso-27001",
-          title: "ISO 27001",
-          subtitle: "Information Security",
-          description: "Ensure the confidentiality, integrity, and availability of your company's sensitive data.",
+          id: "cumplimiento",
+          title: "I want to comply with the law",
+          subtitle: "I don't know if I comply with data protection, AML, or anti-bribery",
+          description: "Regulatory diagnosis and implementation of Law 1581 (personal data), SAGRILAFT, and ISO 37001 (anti-bribery). You reduce legal and reputational exposure.",
+          cta: "I want to comply without risks"
         },
         {
-          id: "mejora",
-          title: "Continuous Improvement",
-          subtitle: "Business Optimization",
-          description: "Strategic planning and productivity to elevate your business competitiveness.",
+          id: "licitaciones",
+          title: "I want to prepare to bid",
+          subtitle: "I lack certifications to participate in bids",
+          description: "Gap diagnosis and accelerated implementation. You can take opportunities that you currently cannot.",
+          cta: "I want to be ready to bid"
         },
         {
-          id: "capacitacion",
-          title: "Training",
-          subtitle: "Corporate Training",
-          description: "Workshops and teaching in document management, quality, and soft skills development.",
+          id: "procesos",
+          title: "I want to improve my processes and productivity",
+          subtitle: "Rework, without clear indicators",
+          description: "Process analysis, continuous improvement, use of management tools. More productivity, decisions with data.",
+          cta: "I want to improve my processes"
         }
       ]
     },
@@ -171,7 +177,7 @@ export const dictionaries = {
       tag: "Professional Profile",
       title: "Leadership with Experience",
       role: "CEO & Founder",
-      description: "Business Administrator specialized in Integrated Management Systems (HSEQ). With extensive experience as a quality coordinator, she offers Myah Consulting her knowledge to lead efficient consulting processes.",
+      description: "Business Administrator specialized in Integrated Management Systems (HSEQ). Has led internal audit processes, optimization, and strategic planning as a quality coordinator, and today puts that knowledge at the service of companies that want to stop operating in chaos and start competing seriously.",
       skills: [
         {
           title: "Expert in Quality and HSEQ",
@@ -188,7 +194,7 @@ export const dictionaries = {
       ]
     },
     footer: {
-      description: "Business consulting specialized in ISO standards implementation, continuous improvement, and process optimization. We accompany your company towards excellence.",
+      description: "We help companies organize their management, get certified, and prepare to compete for more business opportunities. The standard is the means; your growth is the goal.",
       quickLinks: "Quick Links",
       isoNorms: "ISO Standards",
       contact: "Contact",
@@ -198,7 +204,7 @@ export const dictionaries = {
     },
     whatsapp: {
       tooltip: "How can we help you?",
-      message: "Hello, I would like to receive more information about your consulting services."
+      message: "Hello! 👋 I'm from the MYAH Consulting team. To guide you better and faster, tell me: what does your company need today?\n\n1️⃣ Get certified in an ISO standard\n2️⃣ Organize my processes\n3️⃣ Prepare for an audit\n4️⃣ Comply with data protection / SAGRILAFT / anti-bribery\n5️⃣ Prepare to bid\n6️⃣ Other topic"
     }
   }
 };
