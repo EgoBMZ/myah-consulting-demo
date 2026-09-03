@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, ThumbsUp, ThumbsDown } from "lucide-react";
 
 const questions = [
   "¿Tienes procesos documentados que todos siguen?",
@@ -98,15 +98,15 @@ export function DiagnosticForm() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button 
                     onClick={() => handleAnswer(true)}
-                    className="p-6 rounded-2xl border-2 border-border hover:border-accent hover:bg-accent/5 transition-all text-lg font-semibold text-foreground flex items-center justify-center gap-2"
+                    className="group p-6 rounded-2xl border-2 border-border hover:border-accent hover:bg-accent/5 transition-all text-lg font-semibold text-foreground flex items-center justify-center gap-2"
                   >
-                    <CheckCircle2 className="text-accent" /> Sí
+                    <ThumbsUp className="text-muted-foreground group-hover:text-accent group-hover:scale-125 transition-all duration-300" /> Sí
                   </button>
                   <button 
                     onClick={() => handleAnswer(false)}
-                    className="p-6 rounded-2xl border-2 border-border hover:border-destructive hover:bg-destructive/5 transition-all text-lg font-semibold text-foreground flex items-center justify-center gap-2"
+                    className="group p-6 rounded-2xl border-2 border-border hover:border-rose-500 hover:bg-rose-500/10 transition-all duration-300 text-lg font-semibold text-foreground flex items-center justify-center gap-2"
                   >
-                    No
+                    <ThumbsDown className="text-muted-foreground group-hover:text-rose-500 group-hover:scale-125 transition-all duration-300" /> No
                   </button>
                 </div>
               </motion.div>
@@ -127,8 +127,19 @@ export function DiagnosticForm() {
                 <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto text-left">
                   <input required type="text" placeholder="Nombre completo" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
                   <input required type="text" placeholder="Nombre de tu empresa" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
-                  <input required type="email" placeholder="Correo electrónico" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
-                  <input required type="tel" placeholder="WhatsApp" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                  <input required type="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" title="Debe ser un correo válido (ej. usuario@dominio.com)" placeholder="Correo electrónico" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                  <div className="flex gap-2">
+                    <select className="w-[110px] px-2 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all cursor-pointer">
+                      <option value="+57">🇨🇴 +57</option>
+                      <option value="+52">🇲🇽 +52</option>
+                      <option value="+51">🇵🇪 +51</option>
+                      <option value="+56">🇨🇱 +56</option>
+                      <option value="+54">🇦🇷 +54</option>
+                      <option value="+34">🇪🇸 +34</option>
+                      <option value="+1">🇺🇸 +1</option>
+                    </select>
+                    <input required type="tel" pattern="[0-9]*" onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ''); }} placeholder="WhatsApp" className="flex-1 px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                  </div>
                   <button type="submit" className="w-full py-4 rounded-xl bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-lg mt-4">
                     Ver mi resultado
                   </button>

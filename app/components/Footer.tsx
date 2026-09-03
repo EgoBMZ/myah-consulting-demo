@@ -14,9 +14,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand & About */}
           <div className="space-y-4">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-               <div className="bg-white px-3 py-1.5 rounded-xl inline-block shadow-sm">
-                  <Image src="/logoMyahConsulting.png" alt="Myah Consulting Logo" width={140} height={40} className="object-contain h-8 w-auto" />
+            <Link href="/" className="flex-shrink-0 flex items-center group">
+               <div className="bg-white px-3 py-1.5 rounded-xl inline-flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-105">
+                  <Image src="/logoMyahConsulting.png" alt="Myah Consulting Logo" width={100} height={30} className="object-contain h-5 md:h-6 w-auto" style={{ width: 'auto', height: 'auto' }} />
                </div>
             </Link>
             <p className="text-primary-foreground/80 text-sm leading-relaxed mt-4">
