@@ -8,6 +8,7 @@ import { Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useLanguage } from "./LanguageProvider";
+import { useCurrency } from "../../context/CurrencyContext";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,6 +16,7 @@ export function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { t, language, setLanguage } = useLanguage();
+  const { currency, setCurrency } = useCurrency();
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
 
@@ -90,6 +92,17 @@ export function Navbar() {
                 <span className="uppercase">{language}</span>
               </button>
 
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as any)}
+                className="bg-muted/50 border border-transparent hover:border-border text-foreground/80 hover:text-accent text-sm rounded-full px-3 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="USD">USD</option>
+                <option value="COP">COP</option>
+                <option value="MXN">MXN</option>
+                <option value="EUR">EUR</option>
+              </select>
+
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="p-2 rounded-full transition-colors text-foreground/80 hover:bg-muted"
@@ -98,12 +111,14 @@ export function Navbar() {
                 {mounted && theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
               </button>
 
-              <Link
-                href="#contacto"
+              <a
+                href="https://wa.me/573173788220?text=Hola,%20me%20gustar%C3%ADa%20agendar%20una%20consultor%C3%ADa"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-5 py-2.5 rounded-full font-medium transition-all duration-300 shadow-sm hover:scale-105 bg-accent text-slate-900 hover:bg-accent-hover"
               >
                 {t.nav.contact}
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -148,12 +163,28 @@ export function Navbar() {
               
               <div className="px-3 py-3">
                  <button
-                  onClick={toggleLanguage}
-                  className="flex w-full items-center gap-2 text-base font-medium text-card-foreground hover:text-accent"
-                >
-                  <Globe size={20} />
-                  {language === "es" ? "Switch to English" : "Cambiar a Español"}
-                </button>
+                    onClick={toggleLanguage}
+                    className="flex w-full items-center justify-between text-base font-medium text-card-foreground hover:text-accent"
+                  >
+                    <span className="flex items-center gap-2"><Globe size={20} /> Idioma</span>
+                    <span className="uppercase bg-muted px-3 py-1 rounded-full text-sm">{language}</span>
+                 </button>
+              </div>
+
+              <div className="px-3 py-3">
+                 <div className="flex w-full items-center justify-between text-base font-medium text-card-foreground">
+                    <span>Moneda</span>
+                    <select
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value as any)}
+                      className="bg-muted text-card-foreground text-sm rounded-full px-3 py-1.5 border-none focus:ring-2 focus:ring-primary/20"
+                    >
+                      <option value="USD">USD</option>
+                      <option value="COP">COP</option>
+                      <option value="MXN">MXN</option>
+                      <option value="EUR">EUR</option>
+                    </select>
+                 </div>
               </div>
 
               <div className="px-3 py-3 border-t border-border mt-2 pt-4 flex gap-6 items-center justify-center">
@@ -169,13 +200,15 @@ export function Navbar() {
               </div>
 
               <div className="pt-4 px-3">
-                <Link
-                  href="#contacto"
+                <a
+                  href="https://wa.me/573173788220?text=Hola,%20me%20gustar%C3%ADa%20agendar%20una%20consultor%C3%ADa"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block w-full text-center px-5 py-3 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover"
                 >
                   {t.nav.contact}
-                </Link>
+                </a>
               </div>
             </div>
           </motion.div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs, doc, setDoc, deleteDoc, writeBatch } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
+import { AdminSkeletonLoader } from "./AdminSkeletonLoader";
 import { Tags, Plus, Trash2, Edit2, X, AlertTriangle, ArrowLeft } from "lucide-react";
 
 export interface Category {
@@ -158,10 +159,7 @@ export function CategoriesManager() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (loading) return <div className="p-8 text-muted-foreground flex items-center justify-center min-h-[400px]">
-    <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mr-4"></div>
-    Cargando categorías...
-  </div>;
+  if (loading) return <AdminSkeletonLoader />;
 
   return (
     <div className="space-y-6">

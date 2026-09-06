@@ -40,12 +40,14 @@ export function Hero() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="#contacto"
+              <a
+                href="https://wa.me/573173788220?text=Hola,%20me%20gustar%C3%ADa%20agendar%20una%20consultor%C3%ADa"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all duration-300 shadow-lg hover:-translate-y-1 gap-2"
               >
                 {t.hero.ctaPrimary} <ArrowRight size={18} />
-              </Link>
+              </a>
               <Link
                 href="#servicios"
                 className="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-card backdrop-blur-md border border-border text-foreground font-semibold hover:bg-muted transition-all duration-300 gap-2 shadow-sm"

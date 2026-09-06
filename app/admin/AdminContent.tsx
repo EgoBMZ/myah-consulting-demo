@@ -8,6 +8,7 @@ import { BlogManager } from "./components/BlogManager";
 import { AdminUsersManager } from "./components/AdminUsersManager";
 import { CategoriesManager } from "./components/CategoriesManager";
 import { DiagnosticsManager } from "./components/DiagnosticsManager";
+import { TestimonialsManager } from "./components/TestimonialsManager";
 
 // Initial mock data
 const initialServices = [
@@ -101,6 +102,9 @@ export function AdminContent() {
           )}
           {activeTab === "diagnosticos" && (
             <DiagnosticsManager />
+          )}
+          {activeTab === "testimonials" && (
+            <TestimonialsManager />
           )}
           {activeTab === "administradores" && (
             <AdminUsersManager />

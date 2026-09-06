@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../lib/firebase";
+import { useCurrency } from "../../context/CurrencyContext";
 
 export const tiendaProducts = [
   {
@@ -113,6 +114,7 @@ export const tiendaProducts = [
 export function TiendaContent() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -211,7 +213,7 @@ export function TiendaContent() {
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{product.description}</p>
                     
                     <ul className="space-y-2 mb-6">
-                      {(product.features || []).slice(0,3).map((feature: string, idx: number) => (
+                      {(Array.isArray(product.features) ? product.features : (typeof product.features === 'string' ? product.features.split('\n').filter((f: string) => f.trim()) : [])).slice(0,3).map((feature: string, idx: number) => (
                         <li key={idx} className="flex items-start gap-2">
                           <CheckCircle2 size={16} className="text-primary dark:text-accent flex-shrink-0 mt-0.5" />
                           <span className="text-xs text-foreground/80 font-medium leading-tight">{feature}</span>
@@ -222,10 +224,16 @@ export function TiendaContent() {
                   
                   <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
                     <div className="flex flex-col">
-                      {product.originalPrice && (
-                        <span className="text-xs text-muted-foreground line-through font-medium">{product.originalPrice}</span>
+                      {product.isQuote ? (
+                        <span className="text-xl font-black text-foreground">Cotizar servicio</span>
+                      ) : (
+                        <>
+                          {product.originalPrice && (
+                            <span className="text-xs text-muted-foreground line-through font-medium">{formatPrice(product.originalPrice)}</span>
+                          )}
+                          <span className="text-xl font-black text-foreground">{product.price ? formatPrice(product.price) : "Cotizar"}</span>
+                        </>
                       )}
-                      <span className="text-xl font-black text-foreground">{product.price || "Cotizar"}</span>
                     </div>
                     <Link 
                       href={`/tienda/${product.id}`}

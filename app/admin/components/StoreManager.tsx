@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X, Save, Image as ImageIcon, Eye, FileArchive, ArrowLeft, CheckCircle2, ShoppingCart } from "lucide-react";
-import { collection, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
+import { AdminSkeletonLoader } from "./AdminSkeletonLoader";
 
 interface Product {
   id: string;
@@ -11,6 +12,7 @@ interface Product {
   features: string;
   price: string;
   originalPrice: string;
+  isQuote: boolean;
   image: string;
   createdBy: string;
   status: "draft" | "published";
@@ -27,7 +29,7 @@ export function StoreManager() {
   const [isCreating, setIsCreating] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [formData, setFormData] = useState<Product>({ 
-    id: "", title: "", description: "", longDescription: "", features: "", price: "", originalPrice: "", image: "", createdBy: "Admin", status: "draft" 
+    id: "", title: "", description: "", longDescription: "", features: "", price: "", originalPrice: "", isQuote: false, image: "", createdBy: "Admin", status: "draft" 
   });
 
   const fetchProducts = async () => {
@@ -90,7 +92,7 @@ export function StoreManager() {
   };
 
   const openCreate = () => {
-    setFormData({ id: "", title: "", description: "", longDescription: "", features: "", price: "", originalPrice: "", image: "", createdBy: "Admin", status: "draft" });
+    setFormData({ id: "", title: "", description: "", longDescription: "", features: "", price: "", originalPrice: "", isQuote: false, image: "", createdBy: "Admin", status: "draft" });
     setIsCreating(true);
     setIsEditing(null);
   };
@@ -101,7 +103,7 @@ export function StoreManager() {
     setShowPreview(false);
   };
 
-  if (loading) return <div>Cargando tienda...</div>;
+  if (loading) return <AdminSkeletonLoader />;
 
   const handleSeed = async () => {
     if (!confirm("¿Deseas poblar la tienda con los 10 servicios por defecto?")) return;
@@ -221,27 +223,52 @@ export function StoreManager() {
             <div className="space-y-6">
               <div className="bg-muted/30 p-5 rounded-2xl border border-border">
                 <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Precios & Imagen</h3>
+                
+                <div className="flex items-center gap-2 mb-4 bg-muted/50 p-4 rounded-xl border border-border">
+                  <input
+                    type="checkbox"
+                    id="isQuote"
+                    checked={formData.isQuote}
+                    onChange={(e) => {
+                      setFormData({ 
+                        ...formData, 
+                        isQuote: e.target.checked,
+                        price: e.target.checked ? "" : formData.price 
+                      });
+                    }}
+                    className="w-5 h-5 rounded text-primary focus:ring-primary/20 accent-primary cursor-pointer"
+                  />
+                  <label htmlFor="isQuote" className="text-sm font-semibold text-foreground cursor-pointer select-none flex-grow">
+                    Requiere cotización
+                  </label>
+                </div>
+
+                {!formData.isQuote && (
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-bold text-foreground mb-1">Precio Actual</label>
+                      <input
+                        type="text"
+                        value={formData.price}
+                        onChange={e => setFormData({...formData, price: e.target.value})}
+                        className="w-full p-3 border border-border rounded-xl bg-background"
+                        placeholder="Ej. $499 USD"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-foreground mb-1">Precio Original</label>
+                      <input
+                        type="text"
+                        value={formData.originalPrice}
+                        onChange={e => setFormData({...formData, originalPrice: e.target.value})}
+                        className="w-full p-3 border border-border rounded-xl bg-background"
+                        placeholder="Ej. $899 USD"
+                      />
+                    </div>
+                  </div>
+                )}
+                
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold mb-1">Precio Actual</label>
-                    <input 
-                      type="text" 
-                      value={formData.price}
-                      onChange={e => setFormData({...formData, price: e.target.value})}
-                      className="w-full p-3 border border-border rounded-xl bg-background"
-                      placeholder="Ej. $499 USD"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold mb-1">Precio Original (Opcional)</label>
-                    <input 
-                      type="text" 
-                      value={formData.originalPrice}
-                      onChange={e => setFormData({...formData, originalPrice: e.target.value})}
-                      className="w-full p-3 border border-border rounded-xl bg-background"
-                      placeholder="Ej. $899 USD"
-                    />
-                  </div>
                   <div>
                     <label className="block text-sm font-semibold mb-1">URL de la Imagen</label>
                     <input 
@@ -301,9 +328,15 @@ export function StoreManager() {
               <p className="text-xs text-muted-foreground mb-4">Creado por: {product.createdBy}</p>
               
               <div className="flex items-center gap-2 mb-4 mt-auto">
-                <span className="text-xl font-black">{product.price}</span>
-                {product.originalPrice && (
-                  <span className="text-sm text-muted-foreground line-through">{product.originalPrice}</span>
+                {product.isQuote ? (
+                  <span className="font-bold text-lg">Cotizar</span>
+                ) : (
+                  <>
+                    <span className="text-xl font-black">{product.price}</span>
+                    {product.originalPrice && (
+                      <span className="text-sm text-muted-foreground line-through">{product.originalPrice}</span>
+                    )}
+                  </>
                 )}
               </div>
               <div className="flex justify-between items-center pt-4 border-t border-border">
@@ -361,8 +394,14 @@ export function StoreManager() {
                   <div className="bg-card border border-border p-6 rounded-3xl shadow-sm mb-6">
                     <span className="block text-sm text-muted-foreground font-semibold mb-1 uppercase">Inversión Total</span>
                     <div className="flex items-baseline gap-3">
-                      <span className="text-4xl font-black">{formData.price || "$0"}</span>
-                      {formData.originalPrice && <span className="text-xl text-muted-foreground/60 line-through font-semibold">{formData.originalPrice}</span>}
+                      {formData.isQuote ? (
+                        <span className="text-4xl font-black">Cotizar servicio</span>
+                      ) : (
+                        <>
+                          <span className="text-4xl font-black">{formData.price || "$0"}</span>
+                          {formData.originalPrice && <span className="text-xl text-muted-foreground/60 line-through font-semibold">{formData.originalPrice}</span>}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -72,19 +72,19 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-6">{t.footer.isoNorms}</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="#iso-9001" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 9001</Link>
+                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 9001: Calidad</Link>
               </li>
               <li>
-                <Link href="#iso-14001" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 14001</Link>
+                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 14001: Ambiental</Link>
               </li>
               <li>
-                <Link href="#iso-45001" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 45001</Link>
+                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 45001: SST</Link>
               </li>
               <li>
-                <Link href="#iso-27001" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 27001</Link>
+                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">ISO 27001: Seguridad Info.</Link>
               </li>
               <li>
-                <Link href="#mejora" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">Mejora Continua</Link>
+                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">Mejora Continua y Auditorías</Link>
               </li>
             </ul>
           </div>

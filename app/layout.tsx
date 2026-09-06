@@ -5,6 +5,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { LanguageProvider } from "./components/LanguageProvider";
 import { MainLayout } from "./components/MainLayout";
 import { AuthProvider } from "../context/AuthContext";
+import { CurrencyProvider } from "../context/CurrencyContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,16 +27,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
         <AuthProvider>
           <LanguageProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <MainLayout>
-                {children}
-              </MainLayout>
-            </ThemeProvider>
+            <CurrencyProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <MainLayout>
+                  {children}
+                </MainLayout>
+              </ThemeProvider>
+            </CurrencyProvider>
           </LanguageProvider>
         </AuthProvider>
       </body>

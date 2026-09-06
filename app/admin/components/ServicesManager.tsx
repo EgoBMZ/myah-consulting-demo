@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, X, Save, UploadCloud } from "lucide-react";
 import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import { dictionaries } from "../../../lib/dictionaries";
+import { AdminSkeletonLoader } from "./AdminSkeletonLoader";
 
 export interface AppService {
   id: string;
@@ -146,7 +147,7 @@ export function ServicesManager() {
     setIsCreating(false);
   };
 
-  if (loading) return <div>Cargando servicios...</div>;
+  if (loading) return <AdminSkeletonLoader />;
 
   return (
     <div className="space-y-6">

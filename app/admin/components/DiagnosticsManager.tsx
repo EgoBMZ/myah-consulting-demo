@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
+import { AdminSkeletonLoader } from "./AdminSkeletonLoader";
 import { ClipboardList, Trash2, Eye, X, Phone, Mail, Building, CheckCircle2, AlertCircle, ArrowLeft, Search, Filter } from "lucide-react";
 
 export interface DiagnosticAnswer {
@@ -114,9 +115,7 @@ export function DiagnosticsManager() {
     return matchesStatus && matchesSearch && matchesDate;
   });
 
-  if (loading) {
-    return <div className="text-center py-10 animate-pulse text-muted-foreground font-semibold">Cargando diagnósticos...</div>;
-  }
+  if (loading) return <AdminSkeletonLoader />;
 
   return (
     <div className="space-y-6">

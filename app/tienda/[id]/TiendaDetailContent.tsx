@@ -6,12 +6,14 @@ import { ArrowLeft, CheckCircle2, MessageCircle, Star, ChevronLeft, ChevronRight
 import { doc, getDoc, collection, getDocs, limit, query, where } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import { tiendaProducts } from "../TiendaContent";
+import { useCurrency } from "../../../context/CurrencyContext";
 
 export function TiendaDetailContent({ id }: { id: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -167,12 +169,18 @@ export function TiendaDetailContent({ id }: { id: string }) {
               <div className="flex-1 w-full text-center sm:text-left">
                 <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">Inversión</p>
                 <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4 justify-center sm:justify-start">
-                  {product.originalPrice && (
-                    <span className="text-xl text-muted-foreground/60 line-through font-semibold mb-1">
-                      {product.originalPrice}
-                    </span>
+                  {product.isQuote ? (
+                    <span className="text-4xl font-black text-foreground">Cotizar servicio</span>
+                  ) : (
+                    <>
+                      {product.originalPrice && (
+                        <span className="text-xl text-muted-foreground/60 line-through font-semibold mb-1">
+                          {formatPrice(product.originalPrice)}
+                        </span>
+                      )}
+                      <span className="text-4xl font-black text-foreground">{product.price ? formatPrice(product.price) : "Cotizar"}</span>
+                    </>
                   )}
-                  <span className="text-4xl font-black text-foreground">{product.price}</span>
                 </div>
               </div>
               <button 
@@ -204,7 +212,7 @@ export function TiendaDetailContent({ id }: { id: string }) {
               Características Clave
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {(product.features || []).map((feature: string, idx: number) => (
+              {(Array.isArray(product.features) ? product.features : (typeof product.features === 'string' ? product.features.split('\n').filter((f: string) => f.trim()) : [])).map((feature: string, idx: number) => (
                 <div key={idx} className="flex items-start gap-3 p-4 bg-muted/40 rounded-2xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 dark:hover:border-accent/30 dark:hover:bg-accent/5 transition-colors">
                   <CheckCircle2 size={24} className="text-primary dark:text-accent flex-shrink-0" />
                   <span className="text-foreground/90 font-medium leading-relaxed">{feature}</span>
@@ -248,7 +256,11 @@ export function TiendaDetailContent({ id }: { id: string }) {
                 <div className="p-5 flex flex-col flex-grow">
                   <h4 className="font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">{related.title}</h4>
                   <div className="mt-auto flex items-center justify-between pt-4">
-                    <span className="font-black text-foreground">{related.price || "Cotizar"}</span>
+                    {related.isQuote ? (
+                      <span className="font-black text-foreground">Cotizar</span>
+                    ) : (
+                      <span className="font-black text-foreground">{related.price ? formatPrice(related.price) : "Cotizar"}</span>
+                    )}
                     <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       <ArrowRight size={16} />
                     </span>

@@ -1,4 +1,4 @@
-import { LayoutDashboard, ShoppingCart, FileText, Settings, LogOut, Users, AlertTriangle, Tags, ClipboardList } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, FileText, Settings, LogOut, Users, AlertTriangle, Tags, ClipboardList, Star } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { useState } from "react";
 
@@ -16,6 +16,7 @@ export function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
     { id: "blog", label: "Blog", icon: FileText },
     { id: "categories", label: "Categorías", icon: Tags },
     { id: "diagnosticos", label: "Diagnósticos", icon: ClipboardList },
+    { id: "testimonials", label: "Casos de Éxito", icon: Star },
     { id: "administradores", label: "Administradores", icon: Users },
   ];
 

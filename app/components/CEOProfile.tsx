@@ -39,6 +39,16 @@ export function CEOProfile() {
               <div className="relative z-10">
                 <h3 className="text-2xl md:text-3xl font-bold text-card-foreground mb-2">Mery Yineth Angulo Herrera</h3>
                 <p className="text-accent font-semibold text-lg">{t.profile.role}</p>
+                <div className="mt-8">
+                  <a 
+                    href="https://wa.me/573173788220?text=Hola,%20me%20interesa%20una%20consultor%C3%ADa"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-sm"
+                  >
+                    Agendar Consultoría
+                  </a>
+                </div>
               </div>
             </div>
 

@@ -6,6 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../../lib/firebase";
 import { Users, Plus, Trash2, Edit2, X, Shield, Mail, Calendar, UserPlus, Image as ImageIcon, ArrowLeft } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
+import { AdminSkeletonLoader } from "./AdminSkeletonLoader";
 
 interface AdminUser {
   email: string;
@@ -157,7 +158,7 @@ export function AdminUsersManager() {
     }
   };
 
-  if (loading) return <div>Cargando administradores...</div>;
+  if (loading) return <AdminSkeletonLoader />;
 
   return (
     <div className="space-y-6">

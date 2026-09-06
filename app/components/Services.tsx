@@ -115,8 +115,13 @@ function ServiceCard({ service, index, Icon, iconColorClass }: any) {
                 )}
               </div>
 
-              <a href={`/tienda#${service.id}`} className="inline-flex items-center justify-center w-full py-4 rounded-xl bg-muted hover:bg-accent text-foreground hover:text-slate-900 font-bold transition-all shadow-sm group-hover:shadow-md gap-2">
-                {service.cta} <span className="transform transition-transform group-hover:translate-x-1">→</span>
+              <a 
+                href={`https://wa.me/573173788220?text=Hola,%20me%20gustar%C3%ADa%20certificar%20mi%20empresa%20en%20${encodeURIComponent(service.title)}`} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full py-4 rounded-xl bg-muted hover:bg-accent text-foreground hover:text-slate-900 font-bold transition-all shadow-sm group-hover:shadow-md gap-2"
+              >
+                Quiero certificar mi empresa <span className="transform transition-transform group-hover:translate-x-1">→</span>
               </a>
             </div>
           </motion.div>

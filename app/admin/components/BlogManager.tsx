@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X, Save, Calendar, Eye, FileArchive, Clock, UploadCloud, Image as ImageIcon, ArrowLeft } from "lucide-react";
 import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
+import { AdminSkeletonLoader } from "./AdminSkeletonLoader";
 import { useAuth } from "../../../context/AuthContext";
 
 export interface Post {
@@ -322,7 +323,7 @@ export function BlogManager() {
     setIsNewCategory(false);
   };
 
-  if (loading) return <div>Cargando artículos...</div>;
+  if (loading) return <AdminSkeletonLoader />;
 
   return (
     <div className="space-y-6">

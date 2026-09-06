@@ -2,10 +2,31 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Quote } from "lucide-react";
+import { useState, useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../lib/firebase";
 
 export function Testimonials() {
-  // Empty array as requested, to be filled with real testimonials later
-  const testimonials: any[] = [];
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "testimonials"));
+        const data: any[] = [];
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+        data.sort((a, b) => a.order - b.order);
+        setTestimonials(data);
+      } catch (e) {
+        console.error("Error fetching testimonials", e);
+      }
+      setLoading(false);
+    };
+    fetchTestimonials();
+  }, []);
 
   return (
     <section className="py-24 bg-gradient-to-b from-background to-muted/20 relative">
@@ -22,8 +43,14 @@ export function Testimonials() {
                 <Quote className="absolute top-6 right-6 text-muted/30" size={40} />
                 <p className="text-muted-foreground mb-6 relative z-10">"{testi.quote}"</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-muted rounded-full overflow-hidden">
-                    {/* Placeholder image */}
+                  <div className="w-12 h-12 bg-muted rounded-full overflow-hidden flex-shrink-0">
+                    {testi.image ? (
+                      <img src={testi.image} alt={testi.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
+                        {testi.name.charAt(0)}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <h4 className="font-bold text-foreground">{testi.name}</h4>
@@ -32,6 +59,16 @@ export function Testimonials() {
                 </div>
               </div>
             ))}
+            <div className="mt-16 text-center">
+              <a 
+                href="https://wa.me/573173788220?text=Hola,%20quiero%20ser%20un%20caso%20de%20%C3%A9xito" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-sm gap-2"
+              >
+                Quiero ser un caso de éxito <ArrowRight size={18} />
+              </a>
+            </div>
           </div>
         ) : (
           <motion.div 
