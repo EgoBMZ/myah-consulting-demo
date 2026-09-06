@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X, Save, Image as ImageIcon, Eye, FileArchive, ArrowLeft, CheckCircle2, ShoppingCart } from "lucide-react";
+import { collection, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../../../lib/firebase";
 
 interface Product {
   id: string;
@@ -15,11 +17,12 @@ interface Product {
 }
 
 interface StoreManagerProps {
-  products: Product[];
-  setProducts: (products: Product[]) => void;
+  // Props removed since it now reads from Firebase
 }
 
-export function StoreManager({ products, setProducts }: StoreManagerProps) {
+export function StoreManager() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState<Product | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -27,18 +30,57 @@ export function StoreManager({ products, setProducts }: StoreManagerProps) {
     id: "", title: "", description: "", longDescription: "", features: "", price: "", originalPrice: "", image: "", createdBy: "Admin", status: "draft" 
   });
 
-  const handleSave = (status: "draft" | "published") => {
-    const updatedProduct = { ...formData, status };
-    if (isEditing) {
-      setProducts(products.map(p => p.id === isEditing.id ? updatedProduct : p));
-    } else {
-      setProducts([...products, { ...updatedProduct, id: Date.now().toString(), createdBy: "Admin" }]);
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const data: Product[] = [];
+      querySnapshot.forEach((doc) => {
+        data.push({ id: doc.id, ...doc.data() } as Product);
+      });
+      setProducts(data);
+    } catch (e) {
+      console.error(e);
     }
-    closeForm();
+    setLoading(false);
   };
 
-  const handleDelete = (id: string) => {
-    setProducts(products.filter(p => p.id !== id));
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const handleSave = async (status: "draft" | "published") => {
+    try {
+      const updatedProduct = { ...formData, status };
+      let finalId = updatedProduct.id;
+      if (!finalId) {
+        finalId = updatedProduct.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        if (!finalId) finalId = Date.now().toString();
+        updatedProduct.id = finalId;
+      }
+      
+      await setDoc(doc(db, "products", finalId), {
+        ...updatedProduct,
+        createdBy: "Admin"
+      });
+      
+      await fetchProducts();
+      closeForm();
+    } catch (e) {
+      console.error("Error saving product", e);
+      alert("Error al guardar producto");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+      try {
+        await deleteDoc(doc(db, "products", id));
+        await fetchProducts();
+      } catch (e) {
+        console.error("Error deleting product", e);
+      }
+    }
   };
 
   const openEdit = (product: Product) => {
@@ -59,6 +101,30 @@ export function StoreManager({ products, setProducts }: StoreManagerProps) {
     setShowPreview(false);
   };
 
+  if (loading) return <div>Cargando tienda...</div>;
+
+  const handleSeed = async () => {
+    if (!confirm("¿Deseas poblar la tienda con los 10 servicios por defecto?")) return;
+    setLoading(true);
+    try {
+      const { tiendaProducts } = await import("../../tienda/TiendaContent");
+      for (const product of tiendaProducts) {
+        await setDoc(doc(db, "products", product.id), {
+          ...product,
+          status: "published",
+          createdBy: "Admin",
+          createdAt: new Date().toISOString()
+        });
+      }
+      await fetchProducts();
+      alert("¡Tienda sincronizada con éxito!");
+    } catch (e) {
+      console.error(e);
+      alert("Error al sincronizar");
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -68,12 +134,21 @@ export function StoreManager({ products, setProducts }: StoreManagerProps) {
           <p className="text-muted-foreground mt-1">Gestiona los kits y productos digitales.</p>
         </div>
         {!isEditing && !isCreating && (
-          <button 
-            onClick={openCreate}
-            className="bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-colors"
+          <div className="flex items-center gap-3">
+          <button
+            onClick={handleSeed}
+            className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-xl font-bold hover:bg-secondary/80 transition-colors shadow-sm"
           >
-            <Plus size={20} /> Nuevo Producto
+            Sincronizar Datos Iniciales
           </button>
+          <button
+            onClick={openCreate}
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-sm"
+          >
+            <Plus size={20} />
+            <span className="hidden sm:inline">Nuevo Producto</span>
+          </button>
+        </div>
         )}
       </div>
 

@@ -91,7 +91,7 @@ export function AdminContent() {
             <ServicesManager />
           )}
           {activeTab === "store" && (
-            <StoreManager products={products} setProducts={setProducts} />
+            <StoreManager />
           )}
           {activeTab === "blog" && (
             <BlogManager />

@@ -1,77 +1,104 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, ShoppingCart, Star, ChevronLeft, ChevronRight, ShieldCheck, ArrowRight, Tag } from "lucide-react";
+import { ArrowLeft, CheckCircle2, MessageCircle, Star, ChevronLeft, ChevronRight, ShieldCheck, ArrowRight, Tag } from "lucide-react";
+import { doc, getDoc, collection, getDocs, limit, query, where } from "firebase/firestore";
+import { db } from "../../../lib/firebase";
+import { tiendaProducts } from "../TiendaContent";
 
 export function TiendaDetailContent({ id }: { id: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [product, setProduct] = useState<any>(null);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const product = {
-    title: "Kit de Implementación ISO 9001:2015 Completo",
-    description: "Este es un servicio completo de consultoría y auditoría diseñado para ayudar a las empresas a alcanzar y mantener el cumplimiento con los estándares internacionales más rigurosos. Obtén todas las herramientas y metodologías probadas por expertos en la industria.",
-    longDescription: `
-      Nuestro Kit de Implementación es la solución definitiva para empresas que buscan la certificación ISO 9001 sin las complicaciones típicas del proceso. Hemos condensado años de experiencia en consultoría en un paquete estructurado y fácil de seguir.
-      
-      No solo te entregamos documentos; te proporcionamos un mapa de ruta claro hacia la excelencia operativa. Cada plantilla ha sido diseñada para ser 100% auditable y ha pasado rigurosas inspecciones por casas certificadoras a nivel mundial.
-    `,
-    originalPrice: "$899 USD",
-    price: "$499 USD",
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
-    features: [
-      "Diagnóstico inicial completo en línea",
-      "Más de 40 plantillas y manuales editables",
-      "Asesoría personalizada por expertos (2 horas)",
-      "Soporte continuo por correo durante 6 meses"
-    ],
-    testimonials: [
-      {
-        id: 1,
-        author: "Carlos Martínez",
-        company: "TechSolutions S.A.",
-        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=100&auto=format&fit=crop",
-        rating: 5,
-        text: "Gracias a este kit logramos certificar nuestra empresa en tiempo récord. Las plantillas son increíblemente detalladas y fáciles de adaptar a nuestra realidad."
-      },
-      {
-        id: 2,
-        author: "Laura Gómez",
-        company: "Industrias del Norte",
-        avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=100&auto=format&fit=crop",
-        rating: 5,
-        text: "El soporte incluido valió cada centavo. Resuelven tus dudas rápidamente y te guían paso a paso. Altamente recomendado para PYMES."
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const docRef = doc(db, "products", id);
+        const docSnap = await getDoc(docRef);
+        
+        let fetchedProduct = null;
+        if (docSnap.exists()) {
+          fetchedProduct = { id: docSnap.id, ...docSnap.data() };
+        } else {
+          // fallback to local if not seeded yet
+          fetchedProduct = tiendaProducts.find(p => p.id === id);
+        }
+
+        setProduct(fetchedProduct);
+
+        // Fetch related
+        const q = query(collection(db, "products"), where("status", "==", "published"), limit(5));
+        const relSnap = await getDocs(q);
+        const relData: any[] = [];
+        relSnap.forEach(d => {
+          if (d.id !== id) {
+            relData.push({ id: d.id, ...d.data() });
+          }
+        });
+
+        if (relData.length === 0) {
+          setRelatedProducts(tiendaProducts.filter(p => p.id !== id).slice(0, 4));
+        } else {
+          setRelatedProducts(relData.slice(0, 4));
+        }
+
+      } catch (e) {
+        console.error(e);
+        setProduct(tiendaProducts.find(p => p.id === id));
+        setRelatedProducts(tiendaProducts.filter(p => p.id !== id).slice(0, 4));
+      } finally {
+        setLoading(false);
       }
-    ],
-    relatedProducts: [
-      {
-        id: "iso-14001-kit",
-        title: "Kit ISO 14001 Ambiental",
-        description: "Documentación completa para el Sistema de Gestión Ambiental, adaptada a la última versión. Protege el planeta y a tu empresa.",
-        price: "$499 USD",
-        image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop"
-      },
-      {
-        id: "auditoria-interna",
-        title: "Auditoría Interna Remota",
-        description: "Servicio de auditoría interna remota para verificar el cumplimiento antes de la certificación oficial.",
-        price: "$899 USD",
-        image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop"
-      },
-      {
-        id: "iso-45001-kit",
-        title: "Kit ISO 45001 Seguridad",
-        description: "Documentación para el Sistema de Gestión de Seguridad y Salud en el Trabajo. Evita riesgos y protege a tus empleados.",
-        price: "$499 USD",
-        image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop"
-      },
-      {
-        id: "iso-27001-kit",
-        title: "Kit ISO 27001 Seguridad",
-        description: "Protege los activos de información de tu empresa con las mejores prácticas globales y evita ciberataques.",
-        price: "$699 USD",
-        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
-      }
-    ]
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="pt-8 pb-24 bg-background min-h-screen animate-pulse">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="mb-8 w-32 h-10 bg-muted rounded-full"></div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <div className="w-full">
+              <div className="bg-card border border-border rounded-3xl h-[400px] md:h-[500px] bg-muted"></div>
+            </div>
+            <div className="flex flex-col justify-center">
+              <div className="w-40 h-8 bg-muted rounded-full mb-6"></div>
+              <div className="w-full h-12 md:h-16 bg-muted rounded-xl mb-6"></div>
+              <div className="w-3/4 h-12 md:h-16 bg-muted rounded-xl mb-6"></div>
+              
+              <div className="w-full h-6 bg-muted rounded mb-3 mt-4"></div>
+              <div className="w-5/6 h-6 bg-muted rounded mb-3"></div>
+              <div className="w-4/6 h-6 bg-muted rounded mb-12"></div>
+              
+              <div className="w-full h-24 bg-muted rounded-2xl"></div>
+            </div>
+          </div>
+          
+          <div className="bg-card border border-border rounded-3xl p-8 md:p-12 h-64 bg-muted"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product && !loading) {
+    return (
+      <div className="pt-32 pb-24 text-center min-h-screen flex flex-col items-center">
+        <h1 className="text-3xl font-bold mb-4">Servicio no encontrado</h1>
+        <Link href="/tienda" className="text-primary font-bold hover:underline">Volver a la tienda</Link>
+      </div>
+    );
+  }
+
+  const handleWhatsApp = () => {
+    const phoneNumber = "573173788220";
+    const message = encodeURIComponent(`Hola, estoy interesado en el servicio de la tienda: *${product.title}*. ¿Me podrían dar más información?`);
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   };
 
   const scrollLeft = () => {
@@ -94,15 +121,13 @@ export function TiendaDetailContent({ id }: { id: string }) {
         <div className="mb-8 flex items-center justify-between">
           <Link href="/tienda" className="inline-flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors bg-primary/10 px-4 py-2 rounded-full border border-primary/20 shadow-sm">
             <ArrowLeft size={18} />
-            Catálogo
+            Catálogo de Servicios
           </Link>
-          {/* ID badge removed as requested */}
         </div>
 
         {/* Top Section: Photo & Sales Pitch */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           
-          {/* Left: Single Image (Optional) */}
           <div className="w-full">
             {product.image ? (
               <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-lg p-2">
@@ -112,7 +137,6 @@ export function TiendaDetailContent({ id }: { id: string }) {
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     alt={product.title}
                   />
-                  {/* Discount Badge on Image */}
                   {product.originalPrice && (
                      <div className="absolute top-4 right-4 bg-red-500 text-white font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
                        <Tag size={16} />
@@ -128,7 +152,6 @@ export function TiendaDetailContent({ id }: { id: string }) {
             )}
           </div>
 
-          {/* Right: Product Details & CTA */}
           <div className="flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 text-primary font-bold text-xs bg-primary/10 w-max px-3 py-1 rounded-full border border-primary/20 mb-6 uppercase tracking-wider">
               <ShieldCheck size={14} /> Servicio Premium
@@ -139,14 +162,11 @@ export function TiendaDetailContent({ id }: { id: string }) {
             <p className="text-lg text-muted-foreground mb-12 leading-relaxed font-medium">
               {product.description}
             </p>
-
-            <div className="bg-card border border-border p-6 md:p-8 rounded-3xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden">
-              {/* Subtle background glow for the pricing box */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
-              
-              <div className="relative z-10">
-                <span className="block text-sm text-muted-foreground font-semibold mb-1 uppercase tracking-wider">Inversión Total</span>
-                <div className="flex flex-col">
+            
+            <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-card border border-border rounded-2xl shadow-sm">
+              <div className="flex-1 w-full text-center sm:text-left">
+                <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">Inversión</p>
+                <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4 justify-center sm:justify-start">
                   {product.originalPrice && (
                     <span className="text-xl text-muted-foreground/60 line-through font-semibold mb-1">
                       {product.originalPrice}
@@ -155,13 +175,16 @@ export function TiendaDetailContent({ id }: { id: string }) {
                   <span className="text-4xl font-black text-foreground">{product.price}</span>
                 </div>
               </div>
-              <button className="relative z-10 flex-grow sm:flex-grow-0 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all shadow-[0_8px_30px_rgba(52,211,153,0.3)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(52,211,153,0.4)]">
-                <ShoppingCart size={22} />
-                Comprar Ahora
+              <button 
+                onClick={handleWhatsApp}
+                className="relative z-10 w-full sm:w-auto flex-grow sm:flex-grow-0 flex items-center justify-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#128C7E] transition-all shadow-md hover:-translate-y-1 hover:shadow-lg"
+              >
+                <MessageCircle size={22} />
+                Me Interesa
               </button>
             </div>
             <p className="text-center sm:text-right text-xs text-muted-foreground font-medium mt-4">
-              Recibirás acceso inmediato tras el pago.
+              Atención directa por WhatsApp con uno de nuestros asesores.
             </p>
           </div>
         </div>
@@ -170,7 +193,7 @@ export function TiendaDetailContent({ id }: { id: string }) {
         <div className="bg-card border border-border rounded-3xl p-8 md:p-12 shadow-sm mb-16">
           <h2 className="text-2xl md:text-3xl font-black text-foreground mb-6">Detalles del Servicio</h2>
           <div className="prose prose-lg dark:prose-invert max-w-none text-muted-foreground mb-12">
-            {product.longDescription.split('\n').map((paragraph, idx) => (
+            {(product.longDescription || product.description || "").split('\n').map((paragraph: string, idx: number) => (
               paragraph.trim() !== "" && <p key={idx} className="mb-4">{paragraph.trim()}</p>
             ))}
           </div>
@@ -178,10 +201,10 @@ export function TiendaDetailContent({ id }: { id: string }) {
           <div className="pt-8 border-t border-border">
             <h3 className="text-xl md:text-2xl font-black text-foreground mb-8 flex items-center gap-3">
               <CheckCircle2 className="text-primary dark:text-accent" size={28} />
-              ¿Qué incluye este servicio?
+              Características Clave
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {product.features.map((feature, idx) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {(product.features || []).map((feature: string, idx: number) => (
                 <div key={idx} className="flex items-start gap-3 p-4 bg-muted/40 rounded-2xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 dark:hover:border-accent/30 dark:hover:bg-accent/5 transition-colors">
                   <CheckCircle2 size={24} className="text-primary dark:text-accent flex-shrink-0" />
                   <span className="text-foreground/90 font-medium leading-relaxed">{feature}</span>
@@ -191,35 +214,10 @@ export function TiendaDetailContent({ id }: { id: string }) {
           </div>
         </div>
 
-        {/* Bottom Section 1: Testimonials */}
-        <div className="mb-16">
-          <div className="text-center mb-10">
-            <h3 className="text-3xl font-black text-foreground mb-4">Lo que dicen nuestros clientes</h3>
-            <p className="text-muted-foreground">Empresas que ya lograron su certificación con nuestros servicios.</p>
-          </div>
-          <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            {product.testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="min-w-[300px] md:min-w-[400px] bg-card border border-border p-8 rounded-3xl shadow-sm flex flex-col h-full snap-start">
-                <div className="flex text-accent mb-6">
-                  {[...Array(testimonial.rating)].map((_, i) => <Star key={i} size={18} className="fill-accent" />)}
-                </div>
-                <p className="text-muted-foreground italic mb-8 flex-grow leading-relaxed text-lg">"{testimonial.text}"</p>
-                <div className="flex items-center gap-4 mt-auto pt-6 border-t border-border/50">
-                  <img src={testimonial.avatar} alt={testimonial.author} className="w-12 h-12 rounded-full object-cover border-2 border-primary/20" />
-                  <div>
-                    <h4 className="font-bold text-foreground">{testimonial.author}</h4>
-                    <span className="text-sm text-muted-foreground">{testimonial.company}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Bottom Section 2: Related Products Carousel */}
         <div>
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-black text-foreground">Otros servicios que podrían interesarte</h3>
+            <h3 className="text-2xl font-black text-foreground">Otros servicios de interés</h3>
             
             <div className="hidden sm:flex items-center gap-4">
                <div className="flex items-center gap-2">
@@ -230,9 +228,6 @@ export function TiendaDetailContent({ id }: { id: string }) {
                    <ChevronRight size={20} />
                  </button>
                </div>
-               <Link href="/tienda" className="flex items-center gap-2 text-foreground font-semibold hover:text-accent transition-colors ml-4 pl-4 border-l border-border">
-                 Ver catálogo
-               </Link>
             </div>
           </div>
           
@@ -241,41 +236,26 @@ export function TiendaDetailContent({ id }: { id: string }) {
             className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {product.relatedProducts.map((related) => (
+            {relatedProducts.map((related) => (
               <Link href={`/tienda/${related.id}`} key={related.id} className="min-w-[300px] max-w-[300px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col snap-start">
                 <div className="h-40 w-full relative overflow-hidden bg-muted">
                   <img 
-                    src={related.image} 
+                    src={related.image || "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop"} 
                     alt={related.title} 
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   />
                 </div>
                 <div className="p-5 flex flex-col flex-grow">
-                  <h4 className="font-bold text-foreground mb-2 group-hover:text-primary dark:group-hover:text-accent transition-colors">{related.title}</h4>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{related.description}</p>
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-border">
-                    <span className="text-sm font-semibold text-foreground group-hover:text-primary dark:group-hover:text-accent transition-colors">Leer más</span>
-                    <span className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-accent dark:group-hover:text-slate-900 transition-colors">
-                      <ArrowRight size={14} />
+                  <h4 className="font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">{related.title}</h4>
+                  <div className="mt-auto flex items-center justify-between pt-4">
+                    <span className="font-black text-foreground">{related.price || "Cotizar"}</span>
+                    <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <ArrowRight size={16} />
                     </span>
                   </div>
                 </div>
               </Link>
             ))}
-          </div>
-          
-          <div className="flex sm:hidden items-center justify-between mt-4">
-             <div className="flex items-center gap-2">
-                 <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
-                   <ChevronLeft size={20} />
-                 </button>
-                 <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary dark:hover:bg-accent dark:hover:text-slate-900 dark:hover:border-accent transition-colors">
-                   <ChevronRight size={20} />
-                 </button>
-             </div>
-             <Link href="/tienda" className="flex items-center justify-center gap-2 text-foreground font-semibold hover:text-accent transition-colors">
-               Ver todo el catálogo <ArrowRight size={16} />
-             </Link>
           </div>
         </div>
 
