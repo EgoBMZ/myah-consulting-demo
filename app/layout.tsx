@@ -3,9 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { LanguageProvider } from "./components/LanguageProvider";
-import { Navbar } from "./components/Navbar";
-import { Footer } from "./components/Footer";
-import { WhatsAppButton } from "./components/WhatsAppButton";
+import { MainLayout } from "./components/MainLayout";
 import { AuthProvider } from "../context/AuthContext";
 
 const inter = Inter({
@@ -25,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
         <AuthProvider>
           <LanguageProvider>
             <ThemeProvider
@@ -34,12 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               enableSystem
               disableTransitionOnChange
             >
-              <Navbar />
-              <main className="flex-grow pt-16 flex flex-col">
+              <MainLayout>
                 {children}
-              </main>
-              <Footer />
-              <WhatsAppButton />
+              </MainLayout>
             </ThemeProvider>
           </LanguageProvider>
         </AuthProvider>

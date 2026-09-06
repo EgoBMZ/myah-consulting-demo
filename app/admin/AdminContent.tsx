@@ -5,6 +5,9 @@ import { AdminSidebar } from "./components/AdminSidebar";
 import { ServicesManager } from "./components/ServicesManager";
 import { StoreManager } from "./components/StoreManager";
 import { BlogManager } from "./components/BlogManager";
+import { AdminUsersManager } from "./components/AdminUsersManager";
+import { CategoriesManager } from "./components/CategoriesManager";
+import { DiagnosticsManager } from "./components/DiagnosticsManager";
 
 // Initial mock data
 const initialServices = [
@@ -79,7 +82,7 @@ export function AdminContent() {
   const [posts, setPosts] = useState(initialPosts);
 
   return (
-    <div className="flex h-screen bg-background pt-20 overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <main className="flex-1 overflow-y-auto p-8 bg-muted/20">
@@ -91,7 +94,16 @@ export function AdminContent() {
             <StoreManager products={products} setProducts={setProducts} />
           )}
           {activeTab === "blog" && (
-            <BlogManager posts={posts} setPosts={setPosts} />
+            <BlogManager />
+          )}
+          {activeTab === "categories" && (
+            <CategoriesManager />
+          )}
+          {activeTab === "diagnosticos" && (
+            <DiagnosticsManager />
+          )}
+          {activeTab === "administradores" && (
+            <AdminUsersManager />
           )}
         </div>
       </main>

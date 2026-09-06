@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, ArrowRight, ThumbsUp, ThumbsDown } from "lucide-react";
+import { CheckCircle2, ArrowRight, ThumbsUp, ThumbsDown, Loader2 } from "lucide-react";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../lib/firebase";
 
 const questions = [
   "¿Tienes procesos documentados que todos siguen?",
@@ -19,9 +21,25 @@ export function DiagnosticForm() {
   const [step, setStep] = useState("start"); // start, questions, form, result
   const [currentQ, setCurrentQ] = useState(0);
   const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState<boolean[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Form State
+  const [formData, setFormData] = useState({
+    name: "",
+    company: "",
+    email: "",
+    whatsappCode: "+57",
+    whatsapp: "",
+    termsAccepted: false
+  });
 
   const handleAnswer = (yes: boolean) => {
     if (yes) setScore(s => s + 1);
+    
+    // Save answer
+    setAnswers(prev => [...prev, yes]);
+
     if (currentQ < questions.length - 1) {
       setCurrentQ(c => c + 1);
     } else {
@@ -29,9 +47,41 @@ export function DiagnosticForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep("result");
+    if (!formData.termsAccepted) return;
+
+    setIsSubmitting(true);
+    
+    try {
+      const result = getResult();
+      
+      const diagnosticData = {
+        name: formData.name,
+        company: formData.company,
+        email: formData.email,
+        whatsapp: `${formData.whatsappCode}${formData.whatsapp}`,
+        termsAccepted: formData.termsAccepted,
+        score: score,
+        maxScore: questions.length,
+        resultLevel: result.level,
+        answers: answers.map((ans, idx) => ({
+          question: questions[idx],
+          answer: ans ? "Sí" : "No"
+        })),
+        createdAt: new Date().toISOString(),
+        status: "new" // To track in admin panel if it's contacted or not
+      };
+
+      await addDoc(collection(db, "diagnostics"), diagnosticData);
+      
+      setStep("result");
+    } catch (error) {
+      console.error("Error saving diagnostic: ", error);
+      alert("Hubo un error al guardar tu diagnóstico. Por favor intenta de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getResult = () => {
@@ -125,11 +175,11 @@ export function DiagnosticForm() {
                 <p className="text-muted-foreground mb-8">Ingresa tus datos para ver tu resultado y recibir recomendaciones personalizadas.</p>
                 
                 <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto text-left">
-                  <input required type="text" placeholder="Nombre completo" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
-                  <input required type="text" placeholder="Nombre de tu empresa" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
-                  <input required type="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" title="Debe ser un correo válido (ej. usuario@dominio.com)" placeholder="Correo electrónico" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                  <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="Nombre completo" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                  <input required type="text" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} placeholder="Nombre de tu empresa" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                  <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" title="Debe ser un correo válido (ej. usuario@dominio.com)" placeholder="Correo electrónico" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
                   <div className="flex gap-2">
-                    <select className="w-[110px] px-2 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all cursor-pointer">
+                    <select value={formData.whatsappCode} onChange={e => setFormData({...formData, whatsappCode: e.target.value})} className="w-[110px] px-2 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all cursor-pointer">
                       <option value="+57">🇨🇴 +57</option>
                       <option value="+52">🇲🇽 +52</option>
                       <option value="+51">🇵🇪 +51</option>
@@ -138,10 +188,33 @@ export function DiagnosticForm() {
                       <option value="+34">🇪🇸 +34</option>
                       <option value="+1">🇺🇸 +1</option>
                     </select>
-                    <input required type="tel" pattern="[0-9]*" onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ''); }} placeholder="WhatsApp" className="flex-1 px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
+                    <input required type="tel" value={formData.whatsapp} pattern="[0-9]*" onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ''); }} onChange={e => setFormData({...formData, whatsapp: e.target.value})} placeholder="WhatsApp" className="flex-1 px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
                   </div>
-                  <button type="submit" className="w-full py-4 rounded-xl bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-lg mt-4">
-                    Ver mi resultado
+                  
+                  <div className="flex items-start gap-3 mt-4 mb-6">
+                    <input 
+                      type="checkbox" 
+                      id="terms"
+                      required
+                      checked={formData.termsAccepted}
+                      onChange={e => setFormData({...formData, termsAccepted: e.target.checked})}
+                      className="mt-1 w-4 h-4 rounded border-border text-accent focus:ring-accent"
+                    />
+                    <label htmlFor="terms" className="text-sm text-muted-foreground">
+                      Autorizo el tratamiento de mis datos personales para ser contactado por llamadas, WhatsApp o correo electrónico con el fin de recibir los resultados y recomendaciones.
+                    </label>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting || !formData.termsAccepted}
+                    className="w-full py-4 flex items-center justify-center gap-2 rounded-xl bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <><Loader2 className="animate-spin" size={20} /> Procesando...</>
+                    ) : (
+                      "Ver mi resultado"
+                    )}
                   </button>
                 </form>
               </motion.div>
@@ -160,9 +233,15 @@ export function DiagnosticForm() {
                 <h3 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">{getResult().level}</h3>
                 <p className="text-xl text-muted-foreground mb-10 max-w-lg mx-auto">{getResult().desc}</p>
                 
-                <a href="#contacto" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-lg hover:-translate-y-1 gap-2">
-                  Agendar asesoría gratuita <ArrowRight size={20} />
-                </a>
+                <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6 max-w-lg mx-auto shadow-sm">
+                  <h4 className="text-xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
+                    <CheckCircle2 className="text-primary" size={24} /> 
+                    ¡Nuestro equipo ya tiene tu información!
+                  </h4>
+                  <p className="text-muted-foreground">
+                    Analizaremos tu nivel de madurez y nos pondremos en contacto contigo lo más pronto posible para agendar tu asesoría personalizada.
+                  </p>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

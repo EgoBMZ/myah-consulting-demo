@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Edit2, Trash2, X, Save, Image as ImageIcon, Eye, FileArchive, CheckCircle2, ShoppingCart } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Save, Image as ImageIcon, Eye, FileArchive, ArrowLeft, CheckCircle2, ShoppingCart } from "lucide-react";
 
 interface Product {
   id: string;
@@ -79,6 +79,14 @@ export function StoreManager({ products, setProducts }: StoreManagerProps) {
 
       {(isEditing || isCreating) ? (
         <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+          <div className="mb-6">
+             <button 
+                onClick={closeForm}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-colors text-sm font-semibold"
+             >
+                <ArrowLeft size={16} /> Volver a la lista
+             </button>
+          </div>
           <div className="flex justify-between items-center mb-6 border-b border-border pb-4">
             <h2 className="text-2xl font-bold">{isEditing ? "Editar Producto" : "Nuevo Producto"}</h2>
             <div className="flex items-center gap-2">

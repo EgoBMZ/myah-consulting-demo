@@ -52,6 +52,10 @@ export function ServicesManager() {
       });
       data.sort((a, b) => a.order - b.order);
       setServices(data);
+      
+      if (data.length === 0) {
+        await migrateFromLocal();
+      }
     } catch (e) {
       console.error(e);
     }
@@ -60,6 +64,7 @@ export function ServicesManager() {
 
   useEffect(() => {
     fetchServices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSave = async () => {
@@ -86,8 +91,8 @@ export function ServicesManager() {
   };
 
   const migrateFromLocal = async () => {
-    if (!confirm("Esto migrará los servicios locales a Firebase. ¿Continuar?")) return;
     try {
+      let migrated = false;
       const items = dictionaries.es.services.items;
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
@@ -106,12 +111,21 @@ export function ServicesManager() {
           iconColorClass: iconInfo.color
         };
         await setDoc(doc(db, "services", item.id), data);
+        migrated = true;
       }
-      await fetchServices();
-      alert("Migración completada con éxito.");
+      
+      if (migrated) {
+        console.log("Migración automática de servicios completada con éxito.");
+        const querySnapshot = await getDocs(collection(db, "services"));
+        const data: AppService[] = [];
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() } as AppService);
+        });
+        data.sort((a, b) => a.order - b.order);
+        setServices(data);
+      }
     } catch (e) {
-      console.error(e);
-      alert("Error en la migración.");
+      console.error("Error en la migración automática de servicios:", e);
     }
   };
 
@@ -139,23 +153,17 @@ export function ServicesManager() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-black text-foreground">Servicios Dinámicos</h1>
-          <p className="text-muted-foreground mt-1">Gestiona las tarjetas de la sección "Qué necesita tu empresa hoy".</p>
+          <p className="text-muted-foreground mt-1">Administra los servicios que se muestran en la página principal.</p>
         </div>
         <div className="flex gap-3">
-          {services.length === 0 && (
+          {!isEditing && !isCreating && (
             <button 
-              onClick={migrateFromLocal}
-              className="bg-amber-500 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-amber-600 transition-colors"
+              onClick={openCreate}
+              className="bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-colors"
             >
-              <UploadCloud size={20} /> Migrar desde Local
+              <Plus size={20} /> Nuevo Servicio
             </button>
           )}
-          <button 
-            onClick={openCreate}
-            className="bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-colors"
-          >
-            <Plus size={20} /> Nuevo Servicio
-          </button>
         </div>
       </div>
 

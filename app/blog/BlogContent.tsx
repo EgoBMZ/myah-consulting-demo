@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Calendar, Search } from "lucide-react";
 import { useLanguage } from "../components/LanguageProvider";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../lib/firebase";
 
 export function BlogContent() {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todos");
+  const [dynamicPosts, setDynamicPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const posts = [
+  // Fallback posts in case Firebase is empty
+  const fallbackPosts = [
     {
       id: "nueva-iso-9001-2025",
       title: "Lo que debes saber sobre la actualización de la ISO 9001",
@@ -22,69 +27,38 @@ export function BlogContent() {
       category: "Calidad",
       color: "bg-blue-500",
       image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop"
-    },
-    {
-      id: "beneficios-iso-27001",
-      title: "Ciberseguridad: Por qué la ISO 27001 es vital hoy en día",
-      excerpt: "Con los ataques cibernéticos en aumento, implementar un Sistema de Gestión de Seguridad de la Información (SGSI) ya no es un lujo, sino una necesidad.",
-      date: "Oct 18, 2026",
-      author: "Equipo Myah",
-      authorImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=100&auto=format&fit=crop",
-      category: "Seguridad",
-      color: "bg-purple-500",
-      image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?q=80&w=2070&auto=format&fit=crop"
-    },
-    {
-      id: "auditoria-interna-tips",
-      title: "5 Errores comunes durante una auditoría interna",
-      excerpt: "Evita las 'no conformidades' más frecuentes en las auditorías internas de tu empresa con estos consejos prácticos de nuestros auditores líderes.",
-      date: "Oct 10, 2026",
-      author: "Mery Yineth Angulo",
-      authorImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=100&auto=format&fit=crop",
-      category: "Auditoría",
-      color: "bg-emerald-500",
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop"
-    },
-    {
-      id: "cultura-ambiental",
-      title: "Creando una cultura ambiental empresarial con ISO 14001",
-      excerpt: "No se trata solo de cumplir una norma, sino de transformar la visión de tu equipo hacia la sostenibilidad y la responsabilidad corporativa.",
-      date: "Oct 02, 2026",
-      author: "Equipo Myah",
-      authorImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=100&auto=format&fit=crop",
-      category: "Ambiental",
-      color: "bg-green-600",
-      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"
-    },
-    {
-      id: "sg-sst-implementacion",
-      title: "Claves para un Sistema de Gestión en Seguridad y Salud efectivo",
-      excerpt: "Aprende los pilares fundamentales para proteger a tu equipo de trabajo y reducir los índices de accidentabilidad bajo la ISO 45001.",
-      date: "Sep 25, 2026",
-      author: "Mery Yineth Angulo",
-      authorImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=100&auto=format&fit=crop",
-      category: "Salud",
-      color: "bg-red-500",
-      image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=2070&auto=format&fit=crop"
-    },
-    {
-      id: "integracion-normas-iso",
-      title: "Sistemas Integrados de Gestión: Calidad, Ambiente y Seguridad",
-      excerpt: "Descubre cómo optimizar los recursos de tu empresa al integrar múltiples normas ISO en un solo sistema coherente y funcional.",
-      date: "Sep 15, 2026",
-      author: "Equipo Myah",
-      authorImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=100&auto=format&fit=crop",
-      category: "Gestión Integrada",
-      color: "bg-amber-500",
-      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop"
     }
   ];
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const q = query(collection(db, "posts"), where("status", "==", "published"));
+        const querySnapshot = await getDocs(q);
+        const data: any[] = [];
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+        if (data.length > 0) {
+          // Simplistic date sort assuming format MMM DD, YYYY or YYYY-MM-DD
+          // In a real app we'd use a real timestamp
+          setDynamicPosts(data);
+        }
+      } catch (e) {
+        console.error("Error fetching posts:", e);
+      }
+      setLoading(false);
+    };
+    fetchPosts();
+  }, []);
+
+  const posts = dynamicPosts.length > 0 ? dynamicPosts : fallbackPosts;
 
   const categories = ["Todos", ...Array.from(new Set(posts.map(post => post.category)))];
 
   const filteredPosts = posts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (post.title || "").toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          (post.excerpt || post.extract || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === "Todos" || post.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
@@ -140,7 +114,28 @@ export function BlogContent() {
           </div>
         </div>
 
-        {filteredPosts.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm h-[28rem] animate-pulse flex flex-col">
+                <div className="h-56 bg-muted w-full"></div>
+                <div className="p-6 md:p-8 flex flex-col gap-4 flex-grow">
+                  <div className="h-4 bg-muted rounded w-1/4"></div>
+                  <div className="h-6 bg-muted rounded w-3/4"></div>
+                  <div className="h-4 bg-muted rounded w-full"></div>
+                  <div className="h-4 bg-muted rounded w-5/6"></div>
+                  <div className="mt-auto flex justify-between items-center pt-5">
+                    <div className="flex gap-2 items-center">
+                      <div className="w-8 h-8 rounded-full bg-muted"></div>
+                      <div className="w-24 h-4 bg-muted rounded"></div>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-muted"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredPosts.length === 0 ? (
           <div className="text-center py-20 bg-muted/50 rounded-3xl border border-border border-dashed">
              <h3 className="text-xl font-bold text-foreground mb-2">No se encontraron artículos</h3>
              <p className="text-muted-foreground">Intenta con otra palabra clave o selecciona una categoría diferente.</p>
@@ -183,12 +178,12 @@ export function BlogContent() {
                     </h3>
                     
                     <p className="text-sm text-muted-foreground mb-8 flex-grow leading-relaxed line-clamp-3">
-                      {post.excerpt}
+                      {post.excerpt || post.extract}
                     </p>
                     
                     <div className="flex items-center justify-between pt-5 border-t border-border mt-auto">
                       <div className="flex items-center gap-3">
-                        <img src={post.authorImage} alt={post.author} className="w-8 h-8 rounded-full object-cover border-2 border-primary/20 dark:border-accent/20" />
+                        <img src={post.authorImage} alt={post.author} referrerPolicy="no-referrer" className="w-8 h-8 rounded-full object-cover border-2 border-primary/20 dark:border-accent/20" />
                         <span className="text-sm font-bold text-foreground">{post.author}</span>
                       </div>
                       
