@@ -85,7 +85,7 @@ export function AdminContent() {
       <main className="flex-1 overflow-y-auto p-8 bg-muted/20">
         <div className="max-w-7xl mx-auto">
           {activeTab === "services" && (
-            <ServicesManager services={services} setServices={setServices} />
+            <ServicesManager />
           )}
           {activeTab === "store" && (
             <StoreManager products={products} setProducts={setProducts} />

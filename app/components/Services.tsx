@@ -1,9 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, BookOpen, Search, ShieldAlert, Briefcase, TrendingUp, BrainCircuit, Gamepad2, FileText, MonitorPlay, AlertTriangle, CheckCircle2, Trophy, ChevronDown } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../lib/firebase";
+
+const getIconByName = (name: string) => {
+  switch(name) {
+    case "ShieldCheck": return ShieldCheck;
+    case "BookOpen": return BookOpen;
+    case "Search": return Search;
+    case "ShieldAlert": return ShieldAlert;
+    case "Briefcase": return Briefcase;
+    case "TrendingUp": return TrendingUp;
+    case "BrainCircuit": return BrainCircuit;
+    case "Gamepad2": return Gamepad2;
+    case "FileText": return FileText;
+    case "MonitorPlay": return MonitorPlay;
+    default: return ShieldCheck;
+  }
+};
 
 function ServiceCard({ service, index, Icon, iconColorClass }: any) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -110,6 +128,28 @@ function ServiceCard({ service, index, Icon, iconColorClass }: any) {
 
 export function Services() {
   const { t } = useLanguage();
+  const [dynamicServices, setDynamicServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "services"));
+        const data: any[] = [];
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+        if (data.length > 0) {
+          data.sort((a, b) => a.order - b.order);
+          setDynamicServices(data);
+        }
+      } catch (e) {
+        console.error("Error fetching services", e);
+      }
+      setLoading(false);
+    };
+    fetchServices();
+  }, []);
 
   const serviceIcons = [
     { icon: ShieldCheck, color: "bg-blue-500/10 text-blue-600 border-blue-500/20" },
@@ -124,6 +164,8 @@ export function Services() {
     { icon: MonitorPlay, color: "bg-orange-500/10 text-orange-600 border-orange-500/20" }
   ];
 
+  const displayServices = dynamicServices.length > 0 ? dynamicServices : t.services.items;
+
   return (
     <section id="servicios" className="py-24 bg-background relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -137,10 +179,11 @@ export function Services() {
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
           <div className="flex flex-col gap-8">
-            {t.services.items.map((service, index) => {
+            {displayServices.map((service, index) => {
               if (index % 2 !== 0) return null;
-              const Icon = serviceIcons[index].icon;
-              const iconColorClass = serviceIcons[index].color;
+              
+              const Icon = service.icon ? getIconByName(service.icon) : serviceIcons[index % serviceIcons.length].icon;
+              const iconColorClass = service.iconColorClass || serviceIcons[index % serviceIcons.length].color;
               
               return (
                 <ServiceCard 
@@ -154,10 +197,11 @@ export function Services() {
             })}
           </div>
           <div className="flex flex-col gap-8">
-            {t.services.items.map((service, index) => {
+            {displayServices.map((service, index) => {
               if (index % 2 === 0) return null;
-              const Icon = serviceIcons[index].icon;
-              const iconColorClass = serviceIcons[index].color;
+              
+              const Icon = service.icon ? getIconByName(service.icon) : serviceIcons[index % serviceIcons.length].icon;
+              const iconColorClass = service.iconColorClass || serviceIcons[index % serviceIcons.length].color;
               
               return (
                 <ServiceCard 

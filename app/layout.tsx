@@ -6,6 +6,7 @@ import { LanguageProvider } from "./components/LanguageProvider";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { WhatsAppButton } from "./components/WhatsAppButton";
+import { AuthProvider } from "../context/AuthContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,21 +26,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-        <LanguageProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Navbar />
-            <main className="flex-grow pt-16 flex flex-col">
-              {children}
-            </main>
-            <Footer />
-            <WhatsAppButton />
-          </ThemeProvider>
-        </LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Navbar />
+              <main className="flex-grow pt-16 flex flex-col">
+                {children}
+              </main>
+              <Footer />
+              <WhatsAppButton />
+            </ThemeProvider>
+          </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );

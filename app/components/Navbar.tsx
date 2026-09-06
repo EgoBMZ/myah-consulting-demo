@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
@@ -14,6 +15,8 @@ export function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { t, language, setLanguage } = useLanguage();
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin");
 
   useEffect(() => {
     setMounted(true);
@@ -47,8 +50,8 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
            <Link href="/" className="flex-shrink-0 flex items-center group">
-              <div className="bg-white px-3 py-1.5 rounded-xl inline-flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-105">
-                <Image src="/logoMyahConsulting.png" alt="Myah Consulting Logo" width={100} height={30} className="object-contain h-5 md:h-6 w-auto" style={{ width: 'auto', height: 'auto' }} priority />
+              <div className={`bg-white ${isAdminRoute ? "px-2 py-1" : "px-3 py-1.5"} rounded-xl inline-flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-105`}>
+                <Image src="/logoMyahConsulting.png" alt="Myah Consulting Logo" width={100} height={30} className={`object-contain ${isAdminRoute ? "h-3 md:h-4" : "h-5 md:h-6"} w-auto`} style={{ width: 'auto', height: 'auto' }} priority />
               </div>
            </Link>
 
