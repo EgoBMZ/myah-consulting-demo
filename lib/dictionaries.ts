@@ -154,7 +154,7 @@ export const dictionaries = {
     footer: {
       description: "Ayudamos a empresas a organizar su gestión, certificarse y prepararse para competir por más oportunidades de negocio. La norma es el medio; tu crecimiento es el objetivo.",
       quickLinks: "Enlaces Rápidos",
-      isoNorms: "Normas ISO",
+      isoNorms: "¿Qué necesitas lograr?",
       contact: "Contacto",
       rights: "Todos los derechos reservados.",
       privacy: "Políticas de Privacidad",
@@ -320,7 +320,7 @@ export const dictionaries = {
     footer: {
       description: "We help companies organize their management, get certified, and prepare to compete for more business opportunities. The standard is the means; your growth is the goal.",
       quickLinks: "Quick Links",
-      isoNorms: "ISO Standards",
+      isoNorms: "What do you need to achieve?",
       contact: "Contact",
       rights: "All rights reserved.",
       privacy: "Privacy Policy",

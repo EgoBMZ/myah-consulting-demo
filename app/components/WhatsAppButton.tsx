@@ -2,13 +2,15 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "./LanguageProvider";
+import { useSettings } from "../../context/SettingsContext";
 
 export function WhatsAppButton() {
   const { t } = useLanguage();
+  const { settings } = useSettings();
   
   // WhatsApp number and message
-  const phoneNumber = "573000000000"; // Replace with real number
-  const message = t.whatsapp.message;
+  const phoneNumber = settings.whatsappNumber;
+  const message = settings.whatsappMessage || t.whatsapp.message;
   
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 

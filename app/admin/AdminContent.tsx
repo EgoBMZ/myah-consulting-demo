@@ -9,6 +9,10 @@ import { AdminUsersManager } from "./components/AdminUsersManager";
 import { CategoriesManager } from "./components/CategoriesManager";
 import { DiagnosticsManager } from "./components/DiagnosticsManager";
 import { TestimonialsManager } from "./components/TestimonialsManager";
+import { SettingsManager } from "./components/SettingsManager";
+import { FaqsManager } from "./components/FaqsManager";
+import { QuestionsManager } from "./components/QuestionsManager";
+import { CEOProfileManager } from "./components/CEOProfileManager";
 
 // Initial mock data
 const initialServices = [
@@ -91,6 +95,9 @@ export function AdminContent() {
           {activeTab === "services" && (
             <ServicesManager />
           )}
+          {activeTab === "perfil" && (
+            <CEOProfileManager />
+          )}
           {activeTab === "store" && (
             <StoreManager />
           )}
@@ -103,11 +110,20 @@ export function AdminContent() {
           {activeTab === "diagnosticos" && (
             <DiagnosticsManager />
           )}
+          {activeTab === "preguntas" && (
+            <QuestionsManager />
+          )}
           {activeTab === "testimonials" && (
             <TestimonialsManager />
           )}
+          {activeTab === "faqs" && (
+            <FaqsManager />
+          )}
           {activeTab === "administradores" && (
             <AdminUsersManager />
+          )}
+          {activeTab === "settings" && (
+            <SettingsManager />
           )}
         </div>
       </main>

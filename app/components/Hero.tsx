@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, TrendingUp, ShieldCheck } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
+import { useSettings } from "../../context/SettingsContext";
 
 export function Hero() {
   const { t } = useLanguage();
+  const { settings } = useSettings();
 
   return (
     <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-background">
@@ -41,7 +43,7 @@ export function Hero() {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="https://wa.me/573173788220?text=Hola,%20me%20gustar%C3%ADa%20agendar%20una%20consultor%C3%ADa"
+                href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me gustaría agendar una consultoría')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all duration-300 shadow-lg hover:-translate-y-1 gap-2"

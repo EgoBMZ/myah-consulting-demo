@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../lib/firebase";
 
-const faqs = [
+const defaultFaqs = [
   {
     q: "¿Cuánto tiempo toma certificar mi empresa?",
     a: "Depende del tamaño y madurez actual de tus procesos, pero típicamente un proyecto de implementación desde cero toma entre 4 y 6 meses. Si ya tienes bases, podemos acelerar el proceso."
@@ -33,6 +35,29 @@ const faqs = [
 
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
+  const [faqs, setFaqs] = useState<any[]>(defaultFaqs);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "faqs"));
+        if (!snapshot.empty) {
+          const data: any[] = [];
+          snapshot.forEach(doc => {
+            data.push({ id: doc.id, ...doc.data() });
+          });
+          data.sort((a, b) => (a.order || 0) - (b.order || 0));
+          setFaqs(data);
+        }
+      } catch (error) {
+        console.error("Error fetching FAQs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFaqs();
+  }, []);
 
   return (
     <section className="py-24 bg-background relative">

@@ -5,10 +5,11 @@ import { ArrowRight, Quote } from "lucide-react";
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../lib/firebase";
+import { useSettings } from "../../context/SettingsContext";
 
 export function Testimonials() {
   const [testimonials, setTestimonials] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { settings } = useSettings();
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -23,7 +24,6 @@ export function Testimonials() {
       } catch (e) {
         console.error("Error fetching testimonials", e);
       }
-      setLoading(false);
     };
     fetchTestimonials();
   }, []);
@@ -41,7 +41,7 @@ export function Testimonials() {
             {testimonials.map((testi, i) => (
               <div key={i} className="bg-card border border-border p-8 rounded-2xl text-left relative">
                 <Quote className="absolute top-6 right-6 text-muted/30" size={40} />
-                <p className="text-muted-foreground mb-6 relative z-10">"{testi.quote}"</p>
+                <p className="text-muted-foreground mb-6 relative z-10">&quot;{testi.quote}&quot;</p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-muted rounded-full overflow-hidden flex-shrink-0">
                     {testi.image ? (
@@ -61,7 +61,7 @@ export function Testimonials() {
             ))}
             <div className="mt-16 text-center">
               <a 
-                href="https://wa.me/573173788220?text=Hola,%20quiero%20ser%20un%20caso%20de%20%C3%A9xito" 
+                href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, quiero ser un caso de éxito')}`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-sm gap-2"

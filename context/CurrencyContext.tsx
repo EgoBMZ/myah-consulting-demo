@@ -26,6 +26,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     // Load saved currency from localStorage if available
     const savedCurrency = localStorage.getItem("myah_currency") as Currency;
     if (savedCurrency && ["USD", "COP", "MXN", "EUR"].includes(savedCurrency)) {
+      // eslint-disable-next-line
       setCurrencyState(savedCurrency);
     }
 

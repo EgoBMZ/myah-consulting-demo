@@ -1,28 +1,121 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, ArrowRight, ThumbsUp, ThumbsDown, Loader2 } from "lucide-react";
-import { collection, addDoc } from "firebase/firestore";
+import { CheckCircle2, ArrowRight, Loader2, Send } from "lucide-react";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../../lib/firebase";
+import { useSettings } from "../../context/SettingsContext";
 
-const questions = [
-  "¿Tienes procesos documentados que todos siguen?",
-  "¿Conoces tus principales riesgos legales y operativos?",
-  "¿Estás preparado para una auditoría sorpresa hoy?",
-  "¿Mides la satisfacción de tus clientes de forma sistemática?",
-  "¿Tienes un plan de mejora continua activo?",
-  "¿Tus empleados conocen y aplican las políticas de seguridad?",
-  "¿Cumples con la normativa de protección de datos (Ley 1581)?",
-  "¿Tienes certificaciones que te permitan participar en grandes licitaciones?"
+type Option = {
+  label: string;
+  points?: number;
+};
+
+type Question = {
+  id: string;
+  text: string;
+  type: "choice" | "text";
+  options?: Option[];
+  isScored?: boolean;
+};
+
+const defaultDiagnosticQuestions: Question[] = [
+  {
+    id: "q1",
+    text: "¿Qué tan preparada está tu empresa hoy para una auditoría o para las exigencias de un cliente grande?",
+    type: "choice",
+    isScored: true,
+    options: [
+      { label: "Nada preparada, sería un caos", points: 0 },
+      { label: "Algo preparada, pero con huecos importantes", points: 1 },
+      { label: "Bastante preparada, solo faltan detalles", points: 2 }
+    ]
+  },
+  {
+    id: "q2",
+    text: "¿Tu empresa tiene procesos y procedimientos documentados?",
+    type: "choice",
+    isScored: true,
+    options: [
+      { label: "No, todo funciona de memoria", points: 0 },
+      { label: "Algunos, pero desordenados o desactualizados", points: 1 },
+      { label: "Sí, están documentados y se usan de verdad", points: 2 }
+    ]
+  },
+  {
+    id: "q3",
+    text: "¿Alguna vez han iniciado un proceso de certificación ISO?",
+    type: "choice",
+    isScored: true,
+    options: [
+      { label: "Sí, lo intentamos y no lo terminamos", points: 0 },
+      { label: "No, nunca hemos iniciado uno", points: 1 },
+      { label: "Sí, tenemos una certificación vigente", points: 2 }
+    ]
+  },
+  {
+    id: "q4",
+    text: "¿Tu empresa ha perdido o quedado por fuera de una licitación o contrato grande por no tener una certificación o un proceso en orden?",
+    type: "choice",
+    isScored: true,
+    options: [
+      { label: "Sí, nos ha pasado", points: 0 },
+      { label: "No lo sé con certeza", points: 1 },
+      { label: "No, nunca nos ha faltado nada para competir", points: 2 }
+    ]
+  },
+  {
+    id: "q5",
+    text: "¿Cuántas personas trabajan hoy en tu empresa?",
+    type: "choice",
+    isScored: false,
+    options: [
+      { label: "1 a 10 personas" },
+      { label: "11 a 50 personas" },
+      { label: "51 a 200 personas" },
+      { label: "Más de 200 personas" }
+    ]
+  },
+  {
+    id: "q6",
+    text: "¿En qué sector trabaja tu empresa?",
+    type: "text",
+    isScored: false
+  },
+  {
+    id: "q7",
+    text: "¿Tienes una fecha límite o una oportunidad concreta (licitación, cliente nuevo, renovación) que dependa de esto?",
+    type: "choice",
+    isScored: false,
+    options: [
+      { label: "Sí, hay una urgencia o fecha límite clara" },
+      { label: "No, solo quiero prepararme con tiempo" }
+    ]
+  },
+  {
+    id: "q8",
+    text: "¿Qué te gustaría lograr primero?",
+    type: "choice",
+    isScored: false,
+    options: [
+      { label: "Ordenar mis procesos" },
+      { label: "Certificarme en una norma" },
+      { label: "Prepararme para una auditoría o licitación puntual" }
+    ]
+  }
 ];
 
 export function DiagnosticForm() {
+  const { settings } = useSettings();
+  const [questions, setQuestions] = useState<Question[]>(defaultDiagnosticQuestions);
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [step, setStep] = useState("start"); // start, questions, form, result
   const [currentQ, setCurrentQ] = useState(0);
   const [score, setScore] = useState(0);
-  const [answers, setAnswers] = useState<boolean[]>([]);
+  const [answers, setAnswers] = useState<{ question: string; answer: string }[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [textAnswer, setTextAnswer] = useState("");
   
   // Form State
   const [formData, setFormData] = useState({
@@ -30,15 +123,52 @@ export function DiagnosticForm() {
     company: "",
     email: "",
     whatsappCode: "+57",
+    customWhatsappCode: "",
     whatsapp: "",
     termsAccepted: false
   });
 
-  const handleAnswer = (yes: boolean) => {
-    if (yes) setScore(s => s + 1);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "diagnosticQuestions"));
+        if (!snapshot.empty) {
+          const data: any[] = [];
+          snapshot.forEach(doc => {
+            data.push({ id: doc.id, ...doc.data() });
+          });
+          data.sort((a, b) => (a.order || 0) - (b.order || 0));
+          setQuestions(data);
+        }
+      } catch (error) {
+        console.error("Error fetching diagnostic questions:", error);
+      } finally {
+        setLoadingQuestions(false);
+      }
+    };
+    fetchQuestions();
+  }, []);
+
+  const handleChoiceAnswer = (option: Option) => {
+    if (questions[currentQ].isScored && option.points !== undefined) {
+      setScore(s => s + option.points!);
+    }
     
-    // Save answer
-    setAnswers(prev => [...prev, yes]);
+    saveAnswerAndProceed(option.label);
+  };
+
+  const handleTextAnswerSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!textAnswer.trim()) return;
+    saveAnswerAndProceed(textAnswer.trim());
+    setTextAnswer("");
+  };
+
+  const saveAnswerAndProceed = (answerText: string) => {
+    setAnswers(prev => [...prev, {
+      question: questions[currentQ].text,
+      answer: answerText
+    }]);
 
     if (currentQ < questions.length - 1) {
       setCurrentQ(c => c + 1);
@@ -60,17 +190,14 @@ export function DiagnosticForm() {
         name: formData.name,
         company: formData.company,
         email: formData.email,
-        whatsapp: `${formData.whatsappCode}${formData.whatsapp}`,
+        whatsapp: `${formData.whatsappCode === 'otro' ? formData.customWhatsappCode : formData.whatsappCode}${formData.whatsapp}`,
         termsAccepted: formData.termsAccepted,
         score: score,
-        maxScore: questions.length,
+        maxScore: 8,
         resultLevel: result.level,
-        answers: answers.map((ans, idx) => ({
-          question: questions[idx],
-          answer: ans ? "Sí" : "No"
-        })),
+        answers: answers,
         createdAt: new Date().toISOString(),
-        status: "new" // To track in admin panel if it's contacted or not
+        status: "new"
       };
 
       await addDoc(collection(db, "diagnostics"), diagnosticData);
@@ -85,10 +212,53 @@ export function DiagnosticForm() {
   };
 
   const getResult = () => {
-    if (score <= 2) return { level: "Empresa Reactiva", desc: "Operas apagando incendios. Necesitas orden urgente." };
-    if (score <= 4) return { level: "Empresa Organizada", desc: "Tienes bases, pero dependes de personas, no de sistemas." };
-    if (score <= 6) return { level: "Empresa Preparada", desc: "Estás listo para dar el siguiente paso hacia la certificación." };
-    return { level: "Empresa Competitiva", desc: "Tienes un sistema maduro. Es hora de ganar grandes contratos." };
+    if (score <= 2) return { 
+      level: "Nivel Reactiva", 
+      desc: "Según tus respuestas, tu empresa está en nivel Reactiva. Hoy seguramente resuelves el día a día apagando incendios, sin un sistema que te sostenga si llega una auditoría o un cliente grande a exigir orden. La buena noticia es que este es exactamente el punto donde empieza La Ruta MYAH: con una Radiografía clara de cómo opera tu empresa hoy, para saber qué ordenar primero."
+    };
+    if (score <= 4) return { 
+      level: "Nivel Organizada", 
+      desc: "Según tus respuestas, tu empresa está en nivel Organizada. Ya tienes algo de estructura, pero seguramente dispersa: procesos que existen a medias, o que dependen de que la persona correcta esté ese día. El siguiente paso de La Ruta MYAH es el de Orden: dejar tus procesos documentados y estandarizados, para que tu empresa funcione igual de bien la tengas presente o no."
+    };
+    if (score <= 6) return { 
+      level: "Nivel Preparada", 
+      desc: "Según tus respuestas, tu empresa está en nivel Preparada. Ya tienes bases sólidas: procesos que existen y funcionan. Lo que falta es formalizar ese trabajo con una certificación oficial y blindarlo frente a una auditoría real, sin sorpresas de última hora. El siguiente paso de La Ruta MYAH es el de Preparación: implementar los requisitos exactos de la norma que tu empresa necesita y llegar sin miedo a la auditoría de certificación."
+    };
+    return { 
+      level: "Nivel Competitiva", 
+      desc: "Según tus respuestas, tu empresa está en nivel Competitiva. Ya tienes procesos en orden y probablemente una certificación vigente — estás muy por delante de la mayoría de las empresas de tu sector. El siguiente paso de La Ruta MYAH es el de Competitividad: usar ese orden como ventaja real para ganar licitaciones y cerrar contratos con clientes grandes."
+    };
+  };
+
+  const getWhatsAppLink = (level: string) => {
+    let msg = `Hola, acabo de completar el diagnóstico empresarial.
+
+*Mis Resultados:*
+- Nombre: ${formData.name}
+- Empresa: ${formData.company}
+- Correo: ${formData.email}
+- Teléfono: ${formData.whatsappCode === 'otro' ? formData.customWhatsappCode : formData.whatsappCode}${formData.whatsapp}
+- Puntaje: ${score}/${questions.filter(q => q.isScored).length * 2}
+- Nivel de Madurez: *${level}*
+
+Me gustaría agendar una asesoría para saber por dónde empezar.`;
+    return `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const resetForm = () => {
+    setStep("start");
+    setScore(0);
+    setCurrentQ(0);
+    setAnswers([]);
+    setFormData({
+      name: "",
+      company: "",
+      email: "",
+      whatsappCode: "+57",
+      customWhatsappCode: "",
+      whatsapp: "",
+      termsAccepted: false
+    });
   };
 
   return (
@@ -142,23 +312,41 @@ export function DiagnosticForm() {
                 </div>
 
                 <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-10 text-center">
-                  {questions[currentQ]}
+                  {questions[currentQ].text}
                 </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <button 
-                    onClick={() => handleAnswer(true)}
-                    className="group p-6 rounded-2xl border-2 border-border hover:border-accent hover:bg-accent/5 transition-all text-lg font-semibold text-foreground flex items-center justify-center gap-2"
-                  >
-                    <ThumbsUp className="text-muted-foreground group-hover:text-accent group-hover:scale-125 transition-all duration-300" /> Sí
-                  </button>
-                  <button 
-                    onClick={() => handleAnswer(false)}
-                    className="group p-6 rounded-2xl border-2 border-border hover:border-rose-500 hover:bg-rose-500/10 transition-all duration-300 text-lg font-semibold text-foreground flex items-center justify-center gap-2"
-                  >
-                    <ThumbsDown className="text-muted-foreground group-hover:text-rose-500 group-hover:scale-125 transition-all duration-300" /> No
-                  </button>
-                </div>
+                {questions[currentQ].type === "choice" ? (
+                  <div className="grid grid-cols-1 gap-4">
+                    {questions[currentQ].options?.map((opt, i) => (
+                      <button 
+                        key={i}
+                        onClick={() => handleChoiceAnswer(opt)}
+                        className="group p-5 rounded-2xl border-2 border-border hover:border-accent hover:bg-accent/5 transition-all text-left font-medium text-foreground flex items-center justify-between gap-4"
+                      >
+                        <span>{opt.label}</span>
+                        <ArrowRight className="text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-300" size={20}/>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <form onSubmit={handleTextAnswerSubmit} className="flex flex-col gap-4 max-w-lg mx-auto">
+                    <input 
+                      autoFocus
+                      type="text" 
+                      value={textAnswer}
+                      onChange={e => setTextAnswer(e.target.value)}
+                      placeholder="Escribe tu respuesta aquí..."
+                      className="w-full px-6 py-4 rounded-2xl bg-background border-2 border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all text-lg"
+                    />
+                    <button 
+                      type="submit"
+                      disabled={!textAnswer.trim()}
+                      className="w-full py-4 rounded-xl bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      Continuar <ArrowRight size={20} />
+                    </button>
+                  </form>
+                )}
               </motion.div>
             )}
 
@@ -179,7 +367,7 @@ export function DiagnosticForm() {
                   <input required type="text" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} placeholder="Nombre de tu empresa" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
                   <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" title="Debe ser un correo válido (ej. usuario@dominio.com)" placeholder="Correo electrónico" className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
                   <div className="flex gap-2">
-                    <select value={formData.whatsappCode} onChange={e => setFormData({...formData, whatsappCode: e.target.value})} className="w-[110px] px-2 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all cursor-pointer">
+                    <select value={formData.whatsappCode} onChange={e => setFormData({...formData, whatsappCode: e.target.value})} className={`px-2 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all cursor-pointer ${formData.whatsappCode === 'otro' ? 'w-[80px]' : 'w-[110px]'}`}>
                       <option value="+57">🇨🇴 +57</option>
                       <option value="+52">🇲🇽 +52</option>
                       <option value="+51">🇵🇪 +51</option>
@@ -187,7 +375,18 @@ export function DiagnosticForm() {
                       <option value="+54">🇦🇷 +54</option>
                       <option value="+34">🇪🇸 +34</option>
                       <option value="+1">🇺🇸 +1</option>
+                      <option value="otro">Otro</option>
                     </select>
+                    {formData.whatsappCode === "otro" && (
+                      <input 
+                        required 
+                        type="text" 
+                        value={formData.customWhatsappCode}
+                        onChange={e => setFormData({...formData, customWhatsappCode: e.target.value})} 
+                        placeholder="+XX" 
+                        className="w-[70px] px-2 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"
+                      />
+                    )}
                     <input required type="tel" value={formData.whatsapp} pattern="[0-9]*" onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ''); }} onChange={e => setFormData({...formData, whatsapp: e.target.value})} placeholder="WhatsApp" className="flex-1 px-4 py-3 rounded-xl bg-background border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all" />
                   </div>
                   
@@ -231,16 +430,30 @@ export function DiagnosticForm() {
                   Tu Nivel de Madurez
                 </div>
                 <h3 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">{getResult().level}</h3>
-                <p className="text-xl text-muted-foreground mb-10 max-w-lg mx-auto">{getResult().desc}</p>
+                <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+                  {getResult().desc}
+                </p>
                 
-                <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6 max-w-lg mx-auto shadow-sm">
-                  <h4 className="text-xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
-                    <CheckCircle2 className="text-primary" size={24} /> 
-                    ¡Nuestro equipo ya tiene tu información!
+                <div className="bg-primary/5 border border-primary/10 rounded-3xl p-8 max-w-lg mx-auto shadow-sm text-center">
+                  <h4 className="text-xl font-bold text-foreground mb-6 flex items-center justify-center gap-2">
+                    ¿Cuál es el siguiente paso?
                   </h4>
-                  <p className="text-muted-foreground">
-                    Analizaremos tu nivel de madurez y nos pondremos en contacto contigo lo más pronto posible para agendar tu asesoría personalizada.
-                  </p>
+                  <a 
+                    href={getWhatsAppLink(getResult().level)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setTimeout(resetForm, 500)}
+                    className="w-full py-4 px-6 inline-flex items-center justify-center gap-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold transition-all shadow-lg hover:-translate-y-1"
+                  >
+                    Hablar por WhatsApp con mi resultado
+                  </a>
+                  
+                  <button 
+                    onClick={resetForm}
+                    className="w-full mt-4 py-4 px-6 inline-flex items-center justify-center gap-3 rounded-xl bg-muted hover:bg-muted/80 text-foreground font-bold transition-all"
+                  >
+                    Volver a hacer el diagnóstico
+                  </button>
                 </div>
               </motion.div>
             )}

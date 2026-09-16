@@ -15,6 +15,7 @@ export interface AppService {
   solution: string;
   benefit: string;
   cta: string;
+  ctaMessage: string;
   order: number;
   icon: string;
   iconColorClass: string;
@@ -40,7 +41,7 @@ export function ServicesManager() {
   const [isEditing, setIsEditing] = useState<AppService | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState<AppService>({
-    id: "", title: "", subtitle: "", problem: "", solution: "", benefit: "", cta: "", order: 0, icon: "ShieldCheck", iconColorClass: "bg-blue-500/10 text-blue-600 border-blue-500/20", table: null
+    id: "", title: "", subtitle: "", problem: "", solution: "", benefit: "", cta: "", ctaMessage: "", order: 0, icon: "ShieldCheck", iconColorClass: "bg-blue-500/10 text-blue-600 border-blue-500/20", table: null
   });
 
   const fetchServices = async () => {
@@ -106,6 +107,7 @@ export function ServicesManager() {
           solution: item.solution,
           benefit: item.benefit,
           cta: item.cta,
+          ctaMessage: item.ctaMessage || `Hola, estoy interesado en ${item.title}`,
           table: item.table || null,
           order: i,
           icon: iconInfo.icon,
@@ -137,7 +139,7 @@ export function ServicesManager() {
   };
 
   const openCreate = () => {
-    setFormData({ id: "", title: "", subtitle: "", problem: "", solution: "", benefit: "", cta: "", order: services.length, icon: "ShieldCheck", iconColorClass: "bg-blue-500/10 text-blue-600 border-blue-500/20", table: null });
+    setFormData({ id: "", title: "", subtitle: "", problem: "", solution: "", benefit: "", cta: "", ctaMessage: "", order: services.length, icon: "ShieldCheck", iconColorClass: "bg-blue-500/10 text-blue-600 border-blue-500/20", table: null });
     setIsCreating(true);
     setIsEditing(null);
   };
@@ -227,6 +229,16 @@ export function ServicesManager() {
                 onChange={e => setFormData({...formData, cta: e.target.value})}
                 className="w-full p-3 border border-border rounded-xl bg-background"
                 placeholder="Ej. Quiero certificarme"
+              />
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <label className="block text-sm font-semibold mb-1">Mensaje de WhatsApp</label>
+              <input 
+                type="text" 
+                value={formData.ctaMessage || ""}
+                onChange={e => setFormData({...formData, ctaMessage: e.target.value})}
+                className="w-full p-3 border border-border rounded-xl bg-background"
+                placeholder="Ej. Hola, estoy interesado en..."
               />
             </div>
             <div className="col-span-2 md:col-span-1">

@@ -6,6 +6,7 @@ import { ShieldCheck, BookOpen, Search, ShieldAlert, Briefcase, TrendingUp, Brai
 import { useLanguage } from "./LanguageProvider";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../lib/firebase";
+import { useSettings } from "../../context/SettingsContext";
 
 const getIconByName = (name: string) => {
   switch(name) {
@@ -25,6 +26,7 @@ const getIconByName = (name: string) => {
 
 function ServiceCard({ service, index, Icon, iconColorClass }: any) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { settings } = useSettings();
 
   return (
     <motion.div
@@ -116,12 +118,12 @@ function ServiceCard({ service, index, Icon, iconColorClass }: any) {
               </div>
 
               <a 
-                href={`https://wa.me/573173788220?text=Hola,%20me%20gustar%C3%ADa%20certificar%20mi%20empresa%20en%20${encodeURIComponent(service.title)}`} 
+                href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(service.ctaMessage || `Hola, estoy interesado en ${service.title}`)}`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-full py-4 rounded-xl bg-muted hover:bg-accent text-foreground hover:text-slate-900 font-bold transition-all shadow-sm group-hover:shadow-md gap-2"
               >
-                Quiero certificar mi empresa <span className="transform transition-transform group-hover:translate-x-1">→</span>
+                {service.cta || "Saber más"} <span className="transform transition-transform group-hover:translate-x-1">→</span>
               </a>
             </div>
           </motion.div>

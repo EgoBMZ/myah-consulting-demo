@@ -7,6 +7,7 @@ import { doc, getDoc, collection, getDocs, limit, query, where } from "firebase/
 import { db } from "../../../lib/firebase";
 import { tiendaProducts } from "../TiendaContent";
 import { useCurrency } from "../../../context/CurrencyContext";
+import { useSettings } from "../../../context/SettingsContext";
 
 export function TiendaDetailContent({ id }: { id: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -14,6 +15,7 @@ export function TiendaDetailContent({ id }: { id: string }) {
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { formatPrice } = useCurrency();
+  const { settings } = useSettings();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -98,7 +100,7 @@ export function TiendaDetailContent({ id }: { id: string }) {
   }
 
   const handleWhatsApp = () => {
-    const phoneNumber = "573173788220";
+    const phoneNumber = settings.whatsappNumber;
     const message = encodeURIComponent(`Hola, estoy interesado en el servicio de la tienda: *${product.title}*. ¿Me podrían dar más información?`);
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   };
