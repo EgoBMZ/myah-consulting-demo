@@ -33,8 +33,8 @@ export function Navbar() {
 
   const navLinks = [
     { name: t.nav.home, href: "/" },
-    { name: t.nav.services, href: "#servicios" },
-    { name: t.nav.about, href: "#nosotros" },
+    { name: t.nav.services, href: "/#servicios" },
+    { name: t.nav.about, href: "/#nosotros" },
     { name: t.nav.store, href: "/tienda" },
     { name: t.nav.blog, href: "/blog" },
   ];

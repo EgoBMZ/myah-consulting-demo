@@ -167,29 +167,29 @@ export function TiendaDetailContent({ id }: { id: string }) {
               {product.description}
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-card border border-border rounded-2xl shadow-sm">
-              <div className="flex-1 w-full text-center sm:text-left">
-                <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">Inversión</p>
-                <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4 justify-center sm:justify-start">
+            <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6 p-6 bg-card border border-border rounded-2xl shadow-sm">
+              <div className="flex-1 w-full text-center lg:text-left min-w-0">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Inversión</p>
+                <div className="flex flex-col justify-center lg:justify-start leading-tight">
                   {product.isQuote ? (
-                    <span className="text-4xl font-black text-foreground">Cotizar servicio</span>
+                    <span className="text-2xl lg:text-3xl font-black text-foreground">Cotizar servicio</span>
                   ) : (
                     <>
                       {product.originalPrice && (
-                        <span className="text-xl text-muted-foreground/60 line-through font-semibold mb-1">
+                        <span className="text-sm lg:text-base text-muted-foreground/60 line-through font-semibold mb-1">
                           {formatPrice(product.originalPrice)}
                         </span>
                       )}
-                      <span className="text-4xl font-black text-foreground">{product.price ? formatPrice(product.price) : "Cotizar"}</span>
+                      <span className="text-2xl lg:text-3xl font-black text-foreground break-words">{product.price ? formatPrice(product.price) : "Cotizar"}</span>
                     </>
                   )}
                 </div>
               </div>
               <button 
                 onClick={handleWhatsApp}
-                className="relative z-10 w-full sm:w-auto flex-grow sm:flex-grow-0 flex items-center justify-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#128C7E] transition-all shadow-md hover:-translate-y-1 hover:shadow-lg"
+                className="flex-shrink-0 w-full lg:w-auto flex items-center justify-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-xl font-bold text-base hover:bg-[#128C7E] transition-all shadow-sm hover:-translate-y-0.5 hover:shadow-md"
               >
-                <MessageCircle size={22} />
+                <MessageCircle size={20} />
                 Me Interesa
               </button>
             </div>
