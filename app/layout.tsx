@@ -14,6 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://myahconsulting.com"),
   title: "Consultoría en Gestión, ISO y Cumplimiento Empresarial | MYAH Consulting",
   description: "Organizamos tu empresa, te certificamos en ISO 9001, 14001, 45001, 27001 y 37001, y te preparamos para licitar y competir. Diagnóstico gratuito en minutos.",
 };

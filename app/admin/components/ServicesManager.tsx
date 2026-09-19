@@ -107,7 +107,7 @@ export function ServicesManager() {
           solution: item.solution,
           benefit: item.benefit,
           cta: item.cta,
-          ctaMessage: item.ctaMessage || `Hola, estoy interesado en ${item.title}`,
+          ctaMessage: (item as any).ctaMessage || `Hola, estoy interesado en ${item.title}`,
           table: item.table || null,
           order: i,
           icon: iconInfo.icon,
