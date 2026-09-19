@@ -13,6 +13,7 @@ export interface AppSettings {
   socialFacebook: string;
   socialInstagram: string;
   socialLinkedIn: string;
+  isoNormsLinks: { label: string; href: string }[];
 }
 
 const defaultSettings: AppSettings = {
@@ -24,6 +25,13 @@ const defaultSettings: AppSettings = {
   socialFacebook: "https://www.facebook.com/people/MYAH-Consulting/100067957115397/",
   socialInstagram: "https://www.instagram.com/myahconsulting?igsh=MXVhc3B0Ym50MTMyMA%3D%3D",
   socialLinkedIn: "https://www.linkedin.com/in/myah-consulting-70976a200",
+  isoNormsLinks: [
+    { label: "Certificar la calidad de mi empresa – ISO 9001", href: "/tienda" },
+    { label: "Cumplir con seguridad y salud en el trabajo – ISO 45001", href: "/tienda" },
+    { label: "Proteger la información de mi empresa – ISO 27001", href: "/tienda" },
+    { label: "Cuidar el medio ambiente en mi operación – ISO 14001", href: "/tienda" },
+    { label: "Prevenir el soborno y actuar con transparencia – ISO 37001", href: "/tienda" }
+  ],
 };
 
 interface SettingsContextType {
@@ -48,7 +56,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       docRef,
       (docSnap) => {
         if (docSnap.exists()) {
-          setSettings(docSnap.data() as AppSettings);
+          setSettings({ ...defaultSettings, ...(docSnap.data() as AppSettings) });
         }
         setIsLoading(false);
       },

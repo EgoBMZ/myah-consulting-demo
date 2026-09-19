@@ -73,21 +73,13 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6">{t.footer.isoNorms}</h3>
             <ul className="space-y-3">
-              <li>
-                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">Certificar la calidad de mi empresa – ISO 9001</Link>
-              </li>
-              <li>
-                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">Cumplir con seguridad y salud en el trabajo – ISO 45001</Link>
-              </li>
-              <li>
-                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">Proteger la información de mi empresa – ISO 27001</Link>
-              </li>
-              <li>
-                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">Cuidar el medio ambiente en mi operación – ISO 14001</Link>
-              </li>
-              <li>
-                <Link href="/tienda" className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">Prevenir el soborno y actuar con transparencia – ISO 37001</Link>
-              </li>
+              {(settings.isoNormsLinks || []).map((link, idx) => (
+                <li key={idx}>
+                  <Link href={link.href || "/tienda"} className="text-primary-foreground/70 hover:text-accent transition-colors text-sm">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
