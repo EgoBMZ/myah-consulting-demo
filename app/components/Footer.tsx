@@ -22,7 +22,7 @@ export function Footer() {
                </div>
             </Link>
             <p className="text-primary-foreground/80 text-sm leading-relaxed mt-4">
-              {t.footer.description}
+              {settings.footerDescription || t.footer.description}
             </p>
             <div className="flex space-x-4 pt-2">
               <a href={settings.socialLinkedIn} target="_blank" rel="noopener noreferrer" className="text-primary-foreground/60 hover:text-accent transition-colors" aria-label="LinkedIn">
