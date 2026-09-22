@@ -7,22 +7,22 @@ export function Differentiators() {
   const diffs = [
     {
       title: "La norma es el medio, no el fin",
-      desc: "No implementamos ISO para colgar un diploma en la pared, sino para que tu empresa sea más eficiente, segura y rentable.",
+      desc: "Implementamos sistemas de gestión que realmente apoyan la operación, no documentos que terminan archivados.",
       icon: Target
     },
     {
-      title: "Un solo interlocutor, gestión integral",
-      desc: "Centralizamos toda la comunicación. No te pasamos de un asesor a otro, garantizando coherencia y agilidad en tu proceso.",
+      title: "Un solo interlocutor",
+      desc: "Integramos calidad, procesos y cumplimiento para que tengas una visión clara y un acompañamiento integral.",
       icon: User
     },
     {
-      title: "Herramientas tecnológicas reales",
-      desc: "No dejamos tu sistema en papeles físicos. Te enseñamos a administrarlo usando KAWAK, ISOLUCION, Bizagi o Process Maker.",
+      title: "Tecnología que sí aporta",
+      desc: "Utilizamos herramientas digitales e IA cuando ayudan a simplificar, analizar o mejorar la gestión.",
       icon: Laptop
     },
     {
-      title: "Enfoque en oportunidades de negocio",
-      desc: "Nuestra consultoría está diseñada pensando en que cumplas los requisitos exactos que exigen las grandes licitaciones y clientes corporativos.",
+      title: "Gestión que abre oportunidades",
+      desc: "Fortalecemos tu empresa para responder mejor a clientes, auditorías, contratos y nuevas oportunidades.",
       icon: Briefcase
     }
   ];
@@ -31,7 +31,7 @@ export function Differentiators() {
     <section className="py-24 bg-background relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
+
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -43,9 +43,9 @@ export function Differentiators() {
               No somos otra consultora teórica. Somos tu brazo ejecutor.
             </h3>
             <p className="text-lg text-muted-foreground mb-8">
-              La mayoría de consultores te entregan manuales que nadie lee. Nosotros nos aseguramos de que el sistema se viva en la empresa y te abra puertas reales de crecimiento.
+              Convertimos requisitos, normas y oportunidades de mejora en acciones concretas que ayudan a tu empresa a ordenarse, cumplir y estar preparada para crecer.
             </p>
-            
+
             <ul className="space-y-4">
               {[
                 "100% de éxito en auditorías de certificación",

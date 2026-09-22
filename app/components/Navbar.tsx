@@ -16,7 +16,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const { currency, setCurrency } = useCurrency();
   const { settings } = useSettings();
   const pathname = usePathname();
@@ -39,9 +39,6 @@ export function Navbar() {
     { name: t.nav.blog, href: "/blog" },
   ];
 
-  const toggleLanguage = () => {
-    setLanguage(language === "es" ? "en" : "es");
-  };
 
   return (
     <nav
@@ -85,14 +82,6 @@ export function Navbar() {
                 </a>
               </div>
 
-              <button
-                onClick={toggleLanguage}
-                className="flex items-center gap-1.5 text-sm font-medium transition-colors px-3 py-1.5 rounded-full text-foreground/80 hover:text-accent bg-muted/50 hover:bg-muted"
-                title={language === "es" ? "Switch to English" : "Cambiar a Español"}
-              >
-                <Globe size={16} />
-                <span className="uppercase">{language}</span>
-              </button>
 
               <select
                 value={currency}
@@ -163,15 +152,6 @@ export function Navbar() {
                 </Link>
               ))}
               
-              <div className="px-3 py-3">
-                 <button
-                    onClick={toggleLanguage}
-                    className="flex w-full items-center justify-between text-base font-medium text-card-foreground hover:text-accent"
-                  >
-                    <span className="flex items-center gap-2"><Globe size={20} /> Idioma</span>
-                    <span className="uppercase bg-muted px-3 py-1 rounded-full text-sm">{language}</span>
-                 </button>
-              </div>
 
               <div className="px-3 py-3">
                  <div className="flex w-full items-center justify-between text-base font-medium text-card-foreground">
