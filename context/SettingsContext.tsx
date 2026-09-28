@@ -18,11 +18,11 @@ export interface AppSettings {
 }
 
 const defaultSettings: AppSettings = {
-  whatsappNumber: "573000000000",
+  whatsappNumber: "573173788220",
   whatsappMessage: "Hola, vengo de la web de MYAH Consulting. Me gustaría recibir asesoría.",
   footerDescription: "Ayudamos a empresas a organizar su gestión, certificarse y prepararse para competir por más oportunidades de negocio. La norma es el medio; tu crecimiento es el objetivo.",
   footerEmail: "contacto@myahconsulting.com",
-  footerPhone: "+57 300 000 0000",
+  footerPhone: "+57 317 378 8220",
   footerAddress: "Bogotá, Colombia",
   socialFacebook: "https://www.facebook.com/people/MYAH-Consulting/100067957115397/",
   socialInstagram: "https://www.instagram.com/myahconsulting?igsh=MXVhc3B0Ym50MTMyMA%3D%3D",

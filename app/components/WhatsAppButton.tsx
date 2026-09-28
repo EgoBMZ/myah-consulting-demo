@@ -9,7 +9,7 @@ export function WhatsAppButton() {
   const { settings } = useSettings();
   
   // WhatsApp number and message
-  const phoneNumber = settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : "573000000000";
+  const phoneNumber = settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : "573173788220";
   const message = settings.whatsappMessage || t.whatsapp.message;
   
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;

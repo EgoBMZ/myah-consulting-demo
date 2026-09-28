@@ -163,16 +163,7 @@ export function TestimonialsManager() {
                 placeholder="Ej. Gracias a Myah Consulting logramos..."
               />
             </div>
-            <div className="col-span-2">
-              <label className="block text-sm font-semibold mb-1">URL de la Foto (Opcional)</label>
-              <input 
-                type="text" 
-                value={formData.image}
-                onChange={e => setFormData({...formData, image: e.target.value})}
-                className="w-full p-3 border border-border rounded-xl bg-background"
-                placeholder="https://..."
-              />
-            </div>
+
             
             <div className="col-span-2 flex justify-end pt-4 border-t border-border mt-4">
               <button 

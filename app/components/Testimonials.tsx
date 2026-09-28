@@ -43,15 +43,6 @@ export function Testimonials() {
                 <Quote className="absolute top-6 right-6 text-muted/30" size={40} />
                 <p className="text-muted-foreground mb-6 relative z-10">&quot;{testi.quote}&quot;</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-muted rounded-full overflow-hidden flex-shrink-0">
-                    {testi.image ? (
-                      <img src={testi.image} alt={testi.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
-                        {testi.name.charAt(0)}
-                      </div>
-                    )}
-                  </div>
                   <div>
                     <h4 className="font-bold text-foreground">{testi.name}</h4>
                     <p className="text-sm text-muted-foreground">{testi.role}, {testi.company}</p>
@@ -61,7 +52,7 @@ export function Testimonials() {
             ))}
             <div className="mt-16 text-center">
               <a 
-                href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573000000000'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, quiero ser un caso de éxito')}`} 
+                href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573173788220'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, quiero ser un caso de éxito')}`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-sm gap-2"

@@ -88,7 +88,7 @@ export function CEOProfile() {
                 <p className="text-accent font-semibold text-lg">{displayData.role}</p>
                 <div className="mt-8">
                   <a 
-                    href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573000000000'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me interesa una consultoría')}`}
+                    href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573173788220'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me interesa una consultoría')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-sm"
