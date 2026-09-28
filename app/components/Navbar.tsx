@@ -103,7 +103,7 @@ export function Navbar() {
               </button>
 
               <a
-                href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me gustaría agendar una consultoría')}`}
+                href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573000000000'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me gustaría agendar una consultoría')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-2.5 rounded-full font-medium transition-all duration-300 shadow-sm hover:scale-105 bg-accent text-slate-900 hover:bg-accent-hover"
@@ -183,7 +183,7 @@ export function Navbar() {
 
               <div className="pt-4 px-3">
                 <a
-                  href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me gustaría agendar una consultoría')}`}
+                  href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573000000000'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me gustaría agendar una consultoría')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileMenuOpen(false)}

@@ -102,7 +102,8 @@ export function TiendaDetailContent({ id }: { id: string }) {
   const handleWhatsApp = () => {
     const phoneNumber = settings.whatsappNumber;
     const message = encodeURIComponent(`Hola, estoy interesado en el servicio de la tienda: *${product.title}*. ¿Me podrían dar más información?`);
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+    const cleanPhoneNumber = phoneNumber ? phoneNumber.replace(/[^0-9]/g, '') : "573000000000";
+    window.open(`https://wa.me/${cleanPhoneNumber}?text=${message}`, "_blank");
   };
 
   const scrollLeft = () => {

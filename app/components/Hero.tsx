@@ -43,9 +43,7 @@ export function Hero() {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, me gustaría agendar una consultoría')}`}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#diagnostico"
                 className="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all duration-300 shadow-lg hover:-translate-y-1 gap-2"
               >
                 {t.hero.ctaPrimary} <ArrowRight size={18} />

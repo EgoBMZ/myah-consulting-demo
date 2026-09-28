@@ -242,7 +242,7 @@ export function DiagnosticForm() {
 - Nivel de Madurez: *${level}*
 
 Me gustaría agendar una asesoría para saber por dónde empezar.`;
-    return `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+    return `https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573000000000'}?text=${encodeURIComponent(msg)}`;
   };
 
   const resetForm = () => {
