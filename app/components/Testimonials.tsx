@@ -52,7 +52,7 @@ export function Testimonials() {
             ))}
             <div className="mt-16 text-center">
               <a 
-                href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573173788220'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, quiero ser un caso de éxito')}`} 
+                href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573153911288'}?text=${encodeURIComponent(settings.whatsappMessage || 'Hola, quiero ser un caso de éxito')}`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-accent text-slate-900 font-bold hover:bg-accent-hover transition-all shadow-sm gap-2"

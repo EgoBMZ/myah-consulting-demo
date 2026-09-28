@@ -133,9 +133,9 @@ const diagnosticQuestions = [
 ];
 
 const appSettings = {
-  whatsappNumber: "573173788220",
+  whatsappNumber: "573153911288",
   footerEmail: "contacto@myahconsulting.com",
-  footerPhone: "+57 317 378 8220",
+  footerPhone: "+57 315 391 1288",
   footerAddress: "Bogotá, Colombia",
   socialFacebook: "https://www.facebook.com/people/MYAH-Consulting/100067957115397/",
   socialInstagram: "https://www.instagram.com/myahconsulting?igsh=MXVhc3B0Ym50MTMyMA%3D%3D",

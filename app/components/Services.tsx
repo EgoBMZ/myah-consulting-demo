@@ -118,7 +118,7 @@ function ServiceCard({ service, index, Icon, iconColorClass }: any) {
               </div>
 
               <a 
-                href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573173788220'}?text=${encodeURIComponent(service.ctaMessage || `Hola, estoy interesado en ${service.title}`)}`} 
+                href={`https://wa.me/${settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '573153911288'}?text=${encodeURIComponent(service.ctaMessage || `Hola, estoy interesado en ${service.title}`)}`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-full py-4 rounded-xl bg-muted hover:bg-accent text-foreground hover:text-slate-900 font-bold transition-all shadow-sm group-hover:shadow-md gap-2"

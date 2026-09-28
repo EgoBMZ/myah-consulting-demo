@@ -17,12 +17,15 @@ export interface AppSettings {
   isoNormsLinks: { label: string; href: string }[];
 }
 
+export const DEFAULT_WHATSAPP_NUMBER = "573153911288";
+export const DEFAULT_FOOTER_PHONE = "+57 315 391 1288";
+
 const defaultSettings: AppSettings = {
-  whatsappNumber: "573173788220",
+  whatsappNumber: DEFAULT_WHATSAPP_NUMBER,
   whatsappMessage: "Hola, vengo de la web de MYAH Consulting. Me gustaría recibir asesoría.",
   footerDescription: "Ayudamos a empresas a organizar su gestión, certificarse y prepararse para competir por más oportunidades de negocio. La norma es el medio; tu crecimiento es el objetivo.",
   footerEmail: "contacto@myahconsulting.com",
-  footerPhone: "+57 317 378 8220",
+  footerPhone: DEFAULT_FOOTER_PHONE,
   footerAddress: "Bogotá, Colombia",
   socialFacebook: "https://www.facebook.com/people/MYAH-Consulting/100067957115397/",
   socialInstagram: "https://www.instagram.com/myahconsulting?igsh=MXVhc3B0Ym50MTMyMA%3D%3D",
@@ -58,7 +61,13 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       docRef,
       (docSnap) => {
         if (docSnap.exists()) {
-          setSettings({ ...defaultSettings, ...(docSnap.data() as AppSettings) });
+          const data = docSnap.data() as Partial<AppSettings>;
+          setSettings({
+            ...defaultSettings,
+            ...data,
+            whatsappNumber: (data.whatsappNumber && data.whatsappNumber.trim()) ? data.whatsappNumber : DEFAULT_WHATSAPP_NUMBER,
+            footerPhone: (data.footerPhone && data.footerPhone.trim()) ? data.footerPhone : DEFAULT_FOOTER_PHONE,
+          });
         }
         setIsLoading(false);
       },

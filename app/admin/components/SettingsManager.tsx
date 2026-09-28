@@ -7,11 +7,11 @@ import { Save, Loader2, Info, Plus, Trash2 } from "lucide-react";
 
 export function SettingsManager() {
   const [settings, setSettings] = useState({
-    whatsappNumber: "573000000000",
+    whatsappNumber: "573153911288",
     whatsappMessage: "Hola, vengo de la web de MYAH Consulting. Me gustaría recibir asesoría.",
     footerDescription: "Ayudamos a empresas a organizar su gestión, certificarse y prepararse para competir por más oportunidades de negocio. La norma es el medio; tu crecimiento es el objetivo.",
     footerEmail: "contacto@myahconsulting.com",
-    footerPhone: "+57 300 000 0000",
+    footerPhone: "+57 315 391 1288",
     footerAddress: "Bogotá, Colombia",
     socialFacebook: "https://www.facebook.com/people/MYAH-Consulting/100067957115397/",
     socialInstagram: "https://www.instagram.com/myahconsulting?igsh=MXVhc3B0Ym50MTMyMA%3D%3D",
@@ -98,7 +98,7 @@ export function SettingsManager() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Número de WhatsApp (ej. 573000000000)</label>
+            <label className="text-sm font-medium text-foreground">Número de WhatsApp (ej. 573153911288)</label>
             <input
               type="text"
               name="whatsappNumber"
